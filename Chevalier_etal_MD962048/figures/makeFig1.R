@@ -10,7 +10,6 @@ if(s != '') OUTPUT_FOLDER <- s
 pkg2install=c()
 if (! ("sp" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'sp')
 if (! ("raster" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'raster')
-if (! ("ks" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'ks')
 if (! ("shape" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'shape')
 
 
@@ -82,7 +81,7 @@ if (makePlot) {
     spname <- c(rep('sp1', sum(sp1)),rep('sp2', sum(sp2)),rep('sp3', sum(sp3)),rep('sp4', sum(sp4)))
     spclim_unique <- as.data.frame(clim)[(sp1+sp2+sp3+sp4)>=1,1]
     xx=seq(-8, 10, length.out=500)
-    ccs=calib_clim_space(clim_space=values(raster::raster(clim)), bin_width=BIN_WIDTH)
+    ccs=calib_clim_space(clim_space=raster::values(raster::raster(clim)), bin_width=BIN_WIDTH)
     weights=sqrt(c(sum(sp1),sum(sp2),sum(sp3),sum(sp4)))
     pdfsp=as.matrix(do.call(cbind, tapply(spclim, spname, function(x) return(pdf_sp(x, bin_width=BIN_WIDTH, ccs=ccs, xx=xx, shape='normal')))))
     pdfpol=((pdfsp) %*% weights)/sum(weights)
@@ -98,7 +97,6 @@ if (makePlot) {
 
     ## Calculating indices
     test=calculate_indices(pdfpol, xx)
-    fhat1=ks::kde(output[,1:3], gridsize=c(100,100,100))
     h=hist(sortedclim,plot=FALSE, breaks=seq(-6, 9,1))
     h2=hist(spclim_unique,plot=FALSE, breaks=h$breaks)
 
