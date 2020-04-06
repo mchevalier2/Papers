@@ -14,17 +14,17 @@ if (! ("ks" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'ks
 if (! ("shape" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'shape')
 
 
+makePlot <- TRUE
 if (length(pkg2install) > 0){
     s=''
-    makePlot <- FALSE
     while (! s %in% c('y', 'yes', 'Y', 'YES', 'n', 'no', 'N', 'NO')){
         s <- readline(prompt=paste0("The following are required: ", paste(pkg2install, collapse=', '),". Do you want to install them? [yes/no] "))
     }
     if(s %in% c('y', 'yes', 'Y', 'YES')){
         install.packages(pkg2install)
-        makePlot <- TRUE
     }else{
         print("Script aborded.")
+        makePlot <- FALSE
     }
 }
 
