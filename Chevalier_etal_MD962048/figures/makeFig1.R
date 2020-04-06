@@ -14,6 +14,7 @@ if (! ("shape" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 
 
 
 makePlot <- TRUE
+
 if (length(pkg2install) > 0){
     s=''
     while (! s %in% c('y', 'yes', 'Y', 'YES', 'n', 'no', 'N', 'NO')){
