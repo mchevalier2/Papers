@@ -10,7 +10,6 @@ if(s != '') OUTPUT_FOLDER <- s
 pkg2install=c()
 if (! ("sp" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'sp')
 if (! ("raster" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'raster')
-if (! ("shape" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'shape')
 
 
 makePlot <- TRUE
@@ -29,8 +28,28 @@ if (length(pkg2install) > 0){
 }
 
 if (makePlot) {
+    library(raster)
+
     EXT <- c(10,42,-40,5)
 
+    ## Colours
+    RdYlBu=rev(colorRampPalette(c("#A50026","#D73027","#F46D43","#FDAE61","#FEE090","#FFFFBF","#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(12))
+    heatcol4=c(rgb(254,204,92,maxColorValue=255),
+               rgb(253,141,60,maxColorValue=255),
+               rgb(240,59,32,maxColorValue=255),
+               rgb(189,0,38,maxColorValue=255))
+    DIV.10col=c(rgb(255,255,179,maxColorValue=255),
+                rgb(141,211,199,maxColorValue=255),
+                rgb(190,186,218,maxColorValue=255),
+                rgb(251,128,114,maxColorValue=255),
+                rgb(128,177,211,maxColorValue=255),
+                rgb(253,180,98,maxColorValue=255),
+                rgb(179,222,105,maxColorValue=255),
+                rgb(252,205,229,maxColorValue=255),
+                rgb(188,128,189,maxColorValue=255)
+              )[c(3,8,8,8,8,8,7,7,5,4,4,6,1,3,9)]
+
+    ## Plot
     pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig2.pdf"), width=7.54, height=7.54/3*(EXT[4]-EXT[3])/(EXT[2]-EXT[1]))  ;  {
         par(mar=c(0,0,0,0), mfrow=c(1,3))
 
