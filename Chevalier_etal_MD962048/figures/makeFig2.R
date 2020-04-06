@@ -32,6 +32,18 @@ if (makePlot) {
 
     EXT <- c(10,42,-40,5)
 
+    makeTransparent <- function(..., alpha=0.5) {
+        if(alpha>1) alpha=1
+        if(alpha<0) alpha=0
+        alpha = floor(255*alpha)
+        newColor = col2rgb(col=unlist(list(...)), alpha=FALSE)
+        .makeTransparent = function(col, alpha) {
+          rgb(red=col[1], green=col[2], blue=col[3], alpha=alpha, maxColorValue=255)
+        }
+        newColor = apply(newColor, 2, .makeTransparent, alpha=alpha)
+        return(newColor)
+    }
+
     ## Colours
     RdYlBu=rev(colorRampPalette(c("#A50026","#D73027","#F46D43","#FDAE61","#FEE090","#FFFFBF","#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(12))
     heatcol4=c(rgb(254,204,92,maxColorValue=255),
