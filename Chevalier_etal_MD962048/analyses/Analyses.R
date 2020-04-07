@@ -80,7 +80,7 @@ if (makeAnalysis) {
 
 
 
-    cat('/\n>>> Glacial / Interglacial characteristics\n')
+    cat('\n\n>>> Glacial / Interglacial characteristics\n')
     GLACIAL=cbind(c(0, 11.7, 29, 57, 71, 130, 191, 243, 300, 337, 374, 424, 478, 533, 563, 621, 676, 712, 761), c(11.7, 29, 57, 71, 130, 191, 243, 300, 337, 374, 424, 478, 533, 563, 621, 676, 712, 761, 800), c(F, T, T, T, F, T, F, T, F, T, F ,T, F, T, F, T, F, T, F))
 
     ig_tmp=g_tmp=c()
@@ -133,17 +133,18 @@ if (makeAnalysis) {
     J <- H/log(S)
     ## Margalef’s Index
     DMG=(S-1) / log(POLLENSUM[,2])
+    MAT=MAT[,2]
 
-    cat(paste0('cor(MAT, Richness) = ', round(cor(MAT[,2], S), 3)), '\n')
-    cat(paste0('cor(MAT, Pielou s Evenness) = ', round(cor(MAT[,2], J), 3)), '\n')
-    cat(paste0('cor(MAT, Alpha) = ', round(cor(MAT[,2], alpha), 3)), '\n')
-    cat(paste0('cor(MAT, Diversity-Shannon) = ', round(cor(MAT[,2], H), 3)), '\n')
-    cat(paste0('cor(MAT, Diversity-Simpson) = ', round(cor(MAT[,2], D1), 3)), '\n')
-    cat(paste0('cor(MAT, Diversity-Simpson inverse) = ', round(cor(MAT[,2], D2), 3)), '\n')
-    cat(paste0('cor(MAT, Margalef s index) = ', round(cor(MAT[,2], DMG), 3)), '\n')
+    cat(paste0('cor(MAT, Richness) = ', round(cor(MAT, S), 3)), '\n')
+    cat(paste0('cor(MAT, Pielou s Evenness) = ', round(cor(MAT, J), 3)), '\n')
+    cat(paste0('cor(MAT, Alpha) = ', round(cor(MAT, alpha), 3)), '\n')
+    cat(paste0('cor(MAT, Diversity-Shannon) = ', round(cor(MAT, H), 3)), '\n')
+    cat(paste0('cor(MAT, Diversity-Simpson) = ', round(cor(MAT, D1), 3)), '\n')
+    cat(paste0('cor(MAT, Diversity-Simpson inverse) = ', round(cor(MAT, D2), 3)), '\n')
+    cat(paste0('cor(MAT, Margalef s index) = ', round(cor(MAT, DMG), 3)), '\n')
 
     invisible(readline(prompt="\nPress [enter] to plot the cross-correlation between the diversity indices"))
-    pairs(cbind(MAT[,2], H, D1, D2, alpha, S, J, DMG), pch="+", col="blue")
+    pairs(cbind(MAT, H, D1, D2, alpha, S, J, DMG), pch="+", col="blue")
 
 
     #pdf('/Users/mchevali1/Dropbox/BRIAN_MANU/Limpopo/Richness v time.pdf', height=8, width=8)
