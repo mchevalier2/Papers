@@ -29,7 +29,6 @@ if (length(pkg2install) > 0){
 }
 
 if (makePlot) {
-    CREST_folder='/Users/mchevali1/Research/CREST/Sites/MD96-2048/MD96-2048_2019_18.06.19_at_16h20_1'
 
     ## Calculate the Gaussian density of Probability
     ## defined by xbar and sigma, at x
@@ -61,7 +60,7 @@ if (makePlot) {
 
     XX.interp=1:800
     MAT=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/CREST_MAT.xlsx', which=1)[1:181,]
-    pdf=read.csv(paste0(CREST_folder, "/Densities/Numerical_Values_PdfVar/bio1.csv"))[,1:182]
+    pdf=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/CREST_MAT.xlsx', which=2)[-1,]
     MAT.ysmooth=gausmooth(MAT[,c(1,2)], XX.interp, mean(diff(MAT[,1])))
     pdfter=pdf
 
@@ -84,7 +83,7 @@ if (makePlot) {
     pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig3.pdf"), width=7.54, height=7.54/2, useDingbats=FALSE)  ;  {
         par(mar=c(2.3,2.2,3,0.5))
         layout(matrix(1:2, ncol=2), width=c(4,2))
-        plot3D::image2D(z=(1-as.matrix(t(pdfter[,-1]))),y=pdfter[,1], x=MAT[,1], xlim=c(0,790), ylim=c(15,24), zlim=c(0,1), col = plot3D::gg2.col(200)[1:100], cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Mean Annual Temperature (°C)', cex.lab=6/7)
+        plot3D::image2D(z=(1-as.matrix(t(pdfter[,-1]))),y=as.numeric(pdfter[,1]), x=MAT[,1], xlim=c(0,790), ylim=c(15,24), zlim=c(0,1), col = plot3D::gg2.col(200)[1:100], cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Mean Annual Temperature (°C)', cex.lab=6/7)
         segments(430,15,430,24, lty=2)
         text(425,23.8, 'MBT', cex=6/7, adj=c(1,0), srt=90)
         text(435,15.2, 'MBT', cex=6/7, adj=c(0,1), srt=90)
@@ -98,7 +97,6 @@ if (makePlot) {
         polygon(c(0,wave$x*2, 792,0),c(396,2*2**log2(wave$coi), 396,396), col=makeTransparent('white', alpha=0.6), lwd=0.2)
         plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=range(MORLET), col=plot3D::jet.col(100), clab='B - log2(power)', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
     }  ; dev.off()
-
 }
 
 
