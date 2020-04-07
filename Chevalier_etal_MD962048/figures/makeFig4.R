@@ -7,9 +7,6 @@ if(s != '') OUTPUT_FOLDER <- s
 
 pkg2install=c()
 if (! ("rio" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'rio')
-#if (! ("dplR" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'dplR')
-#if (! ("plot3D" %in% rownames(installed.packages()))) pkg2install=c(pkg2install, 'plot3D')
-
 
 makePlot <- TRUE
 
@@ -83,11 +80,9 @@ if (makePlot) {
     TIME=c(0, TIME, 790)
 
 
-
-
     MIS.col=makeTransparent(c(rgb(205,91,65,maxColorValue=255),rgb(255,127,80,maxColorValue=255),rgb(122,197,205,maxColorValue=255),rgb(152,245,255,maxColorValue=255), 'white'), alpha=0.2)
 
-    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig3.pdf"), width=3.54, height=9.45, useDingbats=FALSE)  ;  {
+    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig4.pdf"), width=3.54, height=9.45, useDingbats=FALSE)  ;  {
       par(ps=7,bg=makeTransparent("white",alpha=0),mar=rep(0,4),cex=1,cex.main=1)
       plot.new()
 
@@ -131,7 +126,7 @@ if (makePlot) {
           for(i in seq(430,510,20)) text(-25,i,i, adj=c(1,0.5), col=COL)
           text(-175, 465, '(a) DJF Insolation\nat 20°S (W/m2)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
       }
-      ##
+
       ## Eccentricity
       plot.window(xlim=c(-150,950),ylim=c(-0.04,0.06)+0.1*c(-6,0)/0.7+0.1*c(-6.4*0.025, 6.4*0.025)/0.7,main='',ylab='',xlab='')  ;  {
           COL='black'
@@ -206,5 +201,7 @@ if (makePlot) {
       }
     dev.off()  ;  }
 
-
 }
+
+
+#-;
