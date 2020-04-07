@@ -57,8 +57,8 @@ if (makePlot) {
     }
 
     XX.interp=1:800
-    MAT=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/CREST_MAT.xlsx', which=1)[1:181,]
-    pdf=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/CREST_MAT.xlsx', which=2)
+    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=2)[1:181,]
+    pdf=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=3)
     colnames(pdf) = pdf[1,]
     pdf = pdf[-1,]
     MAT.ysmooth=gausmooth(MAT[,c(1,2)], XX.interp, mean(diff(MAT[,1])))
@@ -72,7 +72,7 @@ if (makePlot) {
         pdfter[,i]=cumsum(tmp2/sum(tmp2))[oo]
     }
 
-    MORLET=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/Data_790kyr.xlsx', which=7)
+    MORLET=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/MorletTransform.xlsx', which=7)
     MORLET.log2=MORLET[,1]
     MORLET.sig=unique(MORLET[,2])
     MORLET.x=1:396
