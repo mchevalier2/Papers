@@ -1,7 +1,5 @@
 ## Figure 3: Presentation of the reconstruction
 ##
-## Loading necessary data
-load(url('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/figures/Fig3.RData'))
 
 OUTPUT_FOLDER=getwd()
 s <- readline(prompt=paste0("Where should the figure be saved?\nDefault is current workin directory (",OUTPUT_FOLDER,"): "))
