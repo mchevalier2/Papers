@@ -57,8 +57,8 @@ if (makePlot) {
     }
 
     XX.interp=1:800
-    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/10de8ba95004e1d713d8c823dbbc748bf3c09b75/MD96-2048_MAT_01.xlsx', which=2)[1:181,]
-    pdf=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/10de8ba95004e1d713d8c823dbbc748bf3c09b75/MD96-2048_MAT_01.xlsx', which=3)
+    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/ClimateReconstructions/MD96-2048_MAT_01.xlsx', which=2)[1:181,]
+    pdf=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/ClimateReconstructions/MD96-2048_MAT_01.xlsx', which=3)
     colnames(pdf) = pdf[1,]
     pdf = pdf[-1,]
     MAT.ysmooth=gausmooth(MAT[,c(1,2)], XX.interp, mean(diff(MAT[,1])))
