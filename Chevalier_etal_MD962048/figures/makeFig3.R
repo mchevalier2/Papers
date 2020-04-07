@@ -60,9 +60,9 @@ if (makePlot) {
     }
 
     XX.interp=1:800
-    PANN=read.csv(paste0(CREST_folder, "/Reconstructions/bio1.csv"))[1:181,]
-    PANN.ysmooth=gausmooth(PANN[,c(1,2)], XX.interp, mean(diff(PANN[,1])))
+    MAT=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/CREST_MAT.xlsx', which=1)[1:181,]
     pdf=read.csv(paste0(CREST_folder, "/Densities/Numerical_Values_PdfVar/bio1.csv"))[,1:182]
+    MAT.ysmooth=gausmooth(MAT[,c(1,2)], XX.interp, mean(diff(MAT[,1])))
     pdfter=pdf
 
     for(i in 2:ncol(pdf)){
@@ -79,18 +79,18 @@ if (makePlot) {
     MORLET.x=1:396
     MORLET=log2(t(MORLET[,-c(1,2)])[,106:1])
     MORLET[MORLET < -4] = -4
-    wave= dplR::morlet(gausmooth(PANN[,1:2], seq(1,792,2), mean(diff(PANN[,1]))), x1=1:396, siglvl=0.95)
+    wave= dplR::morlet(gausmooth(MAT[,1:2], seq(1,792,2), mean(diff(MAT[,1]))), x1=1:396, siglvl=0.95)
 
     pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig3.pdf"), width=7.54, height=7.54/2, useDingbats=FALSE)  ;  {
         par(mar=c(2.3,2.2,3,0.5))
         layout(matrix(1:2, ncol=2), width=c(4,2))
-        plot3D::image2D(z=(1-as.matrix(t(pdfter[,-1]))),y=pdfter[,1], x=PANN[,1], xlim=c(0,790), ylim=c(15,24), zlim=c(0,1), col = plot3D::gg2.col(200)[1:100], cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Mean Annual Temperature (°C)', cex.lab=6/7)
+        plot3D::image2D(z=(1-as.matrix(t(pdfter[,-1]))),y=pdfter[,1], x=MAT[,1], xlim=c(0,790), ylim=c(15,24), zlim=c(0,1), col = plot3D::gg2.col(200)[1:100], cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Mean Annual Temperature (°C)', cex.lab=6/7)
         segments(430,15,430,24, lty=2)
         text(425,23.8, 'MBT', cex=6/7, adj=c(1,0), srt=90)
         text(435,15.2, 'MBT', cex=6/7, adj=c(0,1), srt=90)
-        points(PANN[,1:2], pch=18, col='white', cex=0.8)
-        points(PANN[,1:2], col='white', cex=0.3, type='l')
-        points(1:800, PANN.ysmooth, pch=15, col='black', cex=0.3, type='l')
+        points(MAT[,1:2], pch=18, col='white', cex=0.8)
+        points(MAT[,1:2], col='white', cex=0.3, type='l')
+        points(1:800, MAT.ysmooth, pch=15, col='black', cex=0.3, type='l')
         plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=c(1,0), col=plot3D::gg2.col(200)[1:100], clab='A - Confidence level', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
 
         par(mar=c(2.3,2.2,3,.2))
@@ -98,8 +98,6 @@ if (makePlot) {
         polygon(c(0,wave$x*2, 792,0),c(396,2*2**log2(wave$coi), 396,396), col=makeTransparent('white', alpha=0.6), lwd=0.2)
         plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=range(MORLET), col=plot3D::jet.col(100), clab='B - log2(power)', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
     }  ; dev.off()
-
-
 
 }
 
