@@ -47,6 +47,7 @@ if (makePlot) {
         return(c(opt, CI2.5, CI97.5))
     }
 
+    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/blob/master/MD96-2048_MAT_01.xlsx?raw=true', which=2)[1:181,]
     pdfpol=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/MAT_pollen_responses.csv')
     pdfpol[,-1] = pdfpol[,-1] * (pdfpol[2,1] - pdfpol[1,1])
     IDX=matrix(0, ncol=ncol(pdfpol), nrow=3)
@@ -59,12 +60,14 @@ if (makePlot) {
 
     RdYlBu=rev(colorRampPalette(c("#A50026","#D73027","#F46D43","#FDAE61","#FEE090","#FFFFBF","#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(ncol(pdfpol)))
 
-    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_FigDR2.pdf"), width=5,54, height=9.5, useDingbats=FALSE)  ;  {
+    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_FigDR2.pdf"), width=5.54, height=9.5, useDingbats=FALSE)  ;  {
         par(ps=7,bg=makeTransparent("white",alpha=0),mar=rep(0,4),cex=1,cex.main=1)
         plot(0,0, type='n', ylim=c(2,ncol(pdfpol)), xlim=c(-2,29.2), axes=FALSE, frame=FALSE)
+        rect(IDX[1,2],1,IDX[1,ncol(IDX)],ncol(pdfpol)+1, border='grey50', lty=2, lwd=0.8, col='grey90')
+        rect(min(MAT[,2]),1,max(MAT[,2]),ncol(pdfpol)+1, border='grey50', lty=2, lwd=0.8, col='grey60')
         for(i in 2:ncol(pdfpol)){
             rect(IDX[2,i],i+0.3,IDX[3,i], i-0.3,lwd=0.1, col=RdYlBu[i])
-            segments(IDX[1,i], i+0.25, IDX[1,i], i-0.25, lwd=0.8)
+            segments(IDX[1,i], i+0.25, IDX[1,i], i-0.25, lwd=0.8, col=ifelse(IDX[1,i] >= min(MAT[,2]) & IDX[1,i] <= max(MAT[,2]), 'black', 'white'))
             text(IDX[2,i]-1,i, TAXA[i], cex=5/7, srt=180, adj=c(0,0.5))
         }
         segments(5,1,30,1)
