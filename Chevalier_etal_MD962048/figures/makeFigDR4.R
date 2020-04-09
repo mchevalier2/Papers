@@ -59,7 +59,7 @@ if (makePlot) {
 
 
 
-    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_FigDR4.pdf"), width=7.48, height=7, useDingbats=FALSE)  ;  {
+    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_FigDR4.pdf"), width=7.48, height=6.4, useDingbats=FALSE)  ;  {
         par(ps=7,bg=makeTransparent("white",alpha=0),mar=rep(0,4),cex=1,cex.main=1)
         layout(matrix(1:6, ncol=3, byrow=TRUE), width=1, height=1)
 
