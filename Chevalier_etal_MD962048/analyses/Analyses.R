@@ -41,6 +41,8 @@ if (makeAnalysis) {
     }
 
     cat(">>> Loading data.\n")
+    load(url('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/figures/Fig2.RData'))
+
     MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=2)[1:181,]
     INSOL=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/IndependentRecords.xlsx', which=1)[1201:2001,c(3,7)]
     ECC=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/IndependentRecords.xlsx', which=2)[1:800,c(1,2)]
@@ -56,7 +58,6 @@ if (makeAnalysis) {
     LEAFWAX=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/IndependentRecords.xlsx', which=9)[1:177,c(1,10)]
     LEAFWAX.detrended=cbind(LEAFWAX[,1], LEAFWAX[,2] - LEAFWAX[,1]*coef(lm(LEAFWAX[,2]~ LEAFWAX[,1]))[2] - coef(lm(LEAFWAX[,2]~ LEAFWAX[,1]))[1])
 
-
     XX.interp=1:800
     MAT.smooth=gausmooth(MAT[,c(1,2)], XX.interp, mean(diff(MAT[,1])))
     CO2.smooth=gausmooth(CO2, XX.interp, mean(diff(MAT[,1])))
@@ -66,8 +67,18 @@ if (makeAnalysis) {
     MALAWI.smooth=gausmooth(MALAWI, XX.interp, mean(diff(MAT[,1])))
     LEAFWAX.smooth=gausmooth(LEAFWAX.detrended, XX.interp, mean(diff(MAT[,1])))
 
+    cat('\n\n>>> Modern temperatures across the catchment of MD96-2048\n')
+    clim=c(
+        raster::values(raster::intersect(BIO1, WATERSHED)),
+        raster::values(raster::intersect(BIO1, WATERSHED2[1,])),
+        raster::values(raster::intersect(BIO1, WATERSHED2[2,])),
+        raster::values(raster::intersect(BIO1, WATERSHED2[3,]))
+    )
+    cat(paste0('Mean temperature value = ', round(mean(clim, na.rm=TRUE),1), '°C\n'))
+    cat(paste0('Standard deviation = ', round(sd(clim, na.rm=TRUE),1), '°C\n'))
 
-    cat('\n>>> Correlation analysis (last 430 kyrs / last 790 kyrs)\n')
+
+    cat('\n\n>>> Correlation analysis (last 430 kyrs / last 790 kyrs)\n')
     cat(paste0('cor(MAT, CO2) = ', round(cor(MAT.smooth[1:430], CO2.smooth[1:430]),3), ' / ', round(cor(MAT.smooth, CO2.smooth),3)), '\n')
     cat(paste0('cor(MAT, SSTs) = ', round(cor(MAT.smooth[1:430], SSTs.smooth[1:430]),3), ' / ', round(cor(SSTs.smooth, CO2.smooth),3)), '\n')
     cat(paste0('cor(MAT, LR04) = ', round(cor(MAT.smooth[1:430], LR04.smooth[1:430]),3), ' / ', round(cor(MAT.smooth, LR04.smooth),3)), '\n')
@@ -145,15 +156,6 @@ if (makeAnalysis) {
 
     invisible(readline(prompt="\nPress [enter] to plot the cross-correlation between the diversity indices"))
     pairs(cbind(MAT, H, D1, D2, alpha, S, J, DMG), pch="+", col="blue")
-
-
-    #pdf('/Users/mchevali1/Dropbox/BRIAN_MANU/Limpopo/Richness v time.pdf', height=8, width=8)
-    #par(mfrow=c(2,2))
-    #plot(PANN[,1], POLLENTAXA/POLLENSUM[,2], col=ifelse(PANN[,2] >= 18.5, 'red','blue'), xlab='Time', main='red: MAT > 18.5')
-    #plot(PANN[,1], POLLENTAXA/POLLENSUM[,2], col=ifelse(GIG=='IG', 'red','blue'), xlab='Time', main='red: MIS 1, 5, 7, 9, 11, 13, 15, 17, 19')
-    #plot(PANN[,2], POLLENTAXA/POLLENSUM[,2], col=ifelse(GIG=='IG', 'red','blue'), xlab='MAT', main='red: MIS 1, 5, 7, 9, 11, 13, 15, 17, 19')
-    #plot(POLLENTAXA, POLLENTAXA/POLLENSUM[,2], col=ifelse(GIG=='IG', 'red','blue'), xlab='Richness', main='red: MIS 1, 5, 7, 9, 11, 13, 15, 17, 19')
-    #dev.off()
 
     invisible(readline(prompt="\nPress [enter] for the next plot"))
     par(mfrow=c(1,7), mar=c(5,2,1,0))
