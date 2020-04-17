@@ -56,7 +56,7 @@ if (makePlot) {
         return(newColor)
     }
 
-    XX.interp=1:800
+    XX.interp=0:800
     MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/blob/master/MD96-2048_MAT_01.xlsx?raw=true', which=2)[1:181,]
     pdf=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=3)
     colnames(pdf) = pdf[1,]
@@ -72,13 +72,25 @@ if (makePlot) {
         pdfter[,i]=cumsum(tmp2/sum(tmp2))[oo]
     }
 
-    MORLET=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/MorletTransform.xlsx', which=7)
-    MORLET.log2=MORLET[,1]
-    MORLET.sig=unique(MORLET[,2])
-    MORLET.x=1:396
-    MORLET=log2(t(MORLET[,-c(1,2)])[,106:1])
-    MORLET[MORLET < -4] = -4
-    wave= dplR::morlet(gausmooth(MAT[,1:2], seq(1,792,2), mean(diff(MAT[,1]))), x1=1:396, siglvl=0.95)
+    #MORLET=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/MorletTransform.xlsx', which=7)
+    #MORLET.log2=MORLET[,1]
+    #MORLET.sig=unique(MORLET[,2])
+    #MORLET.x=1:396
+    #MORLET=log2(t(MORLET[,-c(1,2)])[,106:1])
+    #MORLET[MORLET < -4] = -4
+    #wave= dplR::morlet(gausmooth(MAT[,1:2], seq(1,792,2), mean(diff(MAT[,1]))), x1=1:396, siglvl=0.95)
+
+    MAT.interp=approx(MAT[,1:2], xout=seq(0,790,1))
+    morlet=dplR::morlet(MAT.interp$y, MAT.interp$x, siglvl=0.99, p2=8.7, dj=0.1)
+    #morlet=dplR::morlet(MAT.ysmooth, XX.interp, siglvl=0.95, p2=8.8, dj=0.1)
+
+    morletP=log2(morlet$Power)[,ncol(morlet$Power):1]
+    morletP[morletP < -4] = -4
+
+    #plot3D::image2D(z=morletP,y=rev(morlet$period), x=morlet$x, ylim=rev(range(rev(morlet$period))), col = plot3D::jet.col(100), cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Periods (in thousand of years)', cex.lab=6/7, contour=FALSE, log='y', lwd=1.5)
+
+    Signif <- t(matrix(morlet$Signif, dim(morlet$Power)[2], dim(morlet$Power)[1]))
+    Signif <- morlet$Power/Signif
 
     pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig3.pdf"), width=7.54, height=7.54/2, useDingbats=FALSE)  ;  {
         par(mar=c(2.3,2.2,3,0.5))
@@ -89,15 +101,15 @@ if (makePlot) {
         text(435,15.2, 'MBT', cex=6/7, adj=c(0,1), srt=90)
         points(MAT[,1:2], pch=18, col='white', cex=0.8)
         points(MAT[,1:2], col='white', cex=0.3, type='l')
-        points(1:800, MAT.ysmooth, pch=15, col='black', cex=0.3, type='l')
+        points(XX.interp, MAT.ysmooth, pch=15, col='black', cex=0.3, type='l')
         plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=c(1,0), col=plot3D::gg2.col(200)[1:100], clab='A - Confidence level', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
 
-        par(mar=c(2.3,2.2,3,.2))
-        plot3D::image2D(z=MORLET,y=2**(rev(MORLET.log2)), x=MORLET.x*2, ylim=rev(range(2**(rev(MORLET.log2)))), col = plot3D::jet.col(100), cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Periods (in thousand of years)', cex.lab=6/7, contour=list(levels=log2(MORLET.sig), drawlabels=FALSE), log='y', lwd=1.5)
-        polygon(c(0,wave$x*2, 792,0),c(396,2*2**log2(wave$coi), 396,396), col=makeTransparent('white', alpha=0.6), lwd=0.2)
-        plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=range(MORLET), col=plot3D::jet.col(100), clab='B - log2(power)', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
+        par(mar=c(2.3,2.2,3,.8))
+        plot3D::image2D(z=morletP[,1:70],y=rev(morlet$period)[1:70], x=morlet$x, ylim=rev(range(rev(morlet$period)[1:70])), col = plot3D::jet.col(100), cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Periods (in thousand of years)', cex.lab=6/7, contour=FALSE, log='y', lwd=1.5)
+        contour(morlet$x, morlet$period, Signif, levels = 1, labels = morlet$siglvl, drawlabels = FALSE, axes = FALSE, frame.plot = FALSE, add = TRUE, lwd = 1, col = "black")
+        polygon(c(0,morlet$x, 792,0),c(max(morlet$Scale),2**log2(morlet$coi), max(morlet$period),max(morlet$period)), col=makeTransparent('white', alpha=0.6), lwd=0.2)
+        plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=range(morletP), col=plot3D::jet.col(100), clab='B - log2(power)', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
     }  ; dev.off()
 }
-
 
 #-;
