@@ -56,48 +56,30 @@ if (makePlot) {
         return(newColor)
     }
 
-    XX.interp=0:800
-    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/blob/master/MD96-2048_MAT_01.xlsx?raw=true', which=2)[1:181,]
-    pdf=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=3)
-    colnames(pdf) = pdf[1,]
-    pdf = pdf[-1,]
-    MAT.ysmooth=gausmooth(MAT[,c(1,2)], XX.interp, mean(diff(MAT[,1])))
-    pdfter=pdf
+    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=2)[1:181,]
+    POLLEN=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/IndependentRecords.xlsx', which=4)[1:181,-c(2,3)]
+    POLLENSUM=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/IndependentRecords.xlsx', which=4)[1:181,c(1,2,3)]
 
-    for(i in 2:ncol(pdf)){
-        oo=rev(order(pdf[,i]))
-        tmp1=pdf[oo,1]
-        tmp2=pdf[oo,i]
-        oo=order(tmp1)
-        pdfter[,i]=cumsum(tmp2/sum(tmp2))[oo]
-    }
+    ## Species richness (S)
+    S <- vegan::specnumber(POLLEN[,-1]) ## rowSums(BCI > 0) does the same... # Richness
+    ## Pielou's evenness
+    DMG=(S-1) / log(POLLENSUM[,2])
 
 
-    MAT.interp=approx(MAT[,1:2], xout=seq(0,790,1))
-    morlet=dplR::morlet(MAT.interp$y, MAT.interp$x, siglvl=0.99, p2=8.7, dj=0.1)
+    DMG.interp=approx(MAT[,1],DMG, xout=seq(0,790,1))
+    morlet=dplR::morlet(DMG.interp$y, DMG.interp$x, siglvl=0.99, p2=8.7, dj=0.1)
     morletP=log2(morlet$Power)[,ncol(morlet$Power):1]
     morletP[morletP < -4] = -4
 
     Signif <- t(matrix(morlet$Signif, dim(morlet$Power)[2], dim(morlet$Power)[1]))
     Signif <- morlet$Power/Signif
 
-    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig3.pdf"), width=7.54, height=7.54/2, useDingbats=FALSE)  ;  {
-        par(mar=c(2.3,2.2,3,0.5))
-        layout(matrix(1:2, ncol=2), width=c(4,2))
-        plot3D::image2D(z=(1-as.matrix(t(pdfter[,-1]))),y=pdfter[,1], x=MAT[,1], xlim=c(0,790), ylim=c(15,24), zlim=c(0,1), col = plot3D::gg2.col(200)[1:100], cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Mean Annual Temperature (°C)', cex.lab=6/7)
-        segments(430,15,430,24, lty=2)
-        text(425,23.8, 'MBT', cex=6/7, adj=c(1,0), srt=90)
-        text(435,15.2, 'MBT', cex=6/7, adj=c(0,1), srt=90)
-        points(MAT[,1:2], pch=18, col='white', cex=0.8)
-        points(MAT[,1:2], col='white', cex=0.3, type='l')
-        points(XX.interp, MAT.ysmooth, pch=15, col='black', cex=0.3, type='l')
-        plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=c(1,0), col=plot3D::gg2.col(200)[1:100], clab='A - Confidence level', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
-
+    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_FigDR6.pdf"), width=7.54/2, height=7.54/2, useDingbats=FALSE)  ;  {
         par(mar=c(2.3,2.2,3,.2))
         plot3D::image2D(z=morletP[,1:70],y=rev(morlet$period)[1:70], x=morlet$x, ylim=rev(range(rev(morlet$period)[1:70])), col = plot3D::jet.col(100), cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Periods (in thousand of years)', cex.lab=6/7, contour=FALSE, log='y', lwd=1.5)
         contour(morlet$x, morlet$period, Signif, levels = 1, labels = morlet$siglvl, drawlabels = FALSE, axes = FALSE, frame.plot = FALSE, add = TRUE, lwd = 1, col = "black")
         polygon(c(0,morlet$x, 792,0),c(max(morlet$Scale),2**log2(morlet$coi), max(morlet$period),max(morlet$period)), col=makeTransparent('white', alpha=0.6), lwd=0.2)
-        plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=range(morletP), col=plot3D::jet.col(100), clab='B - log2(power)', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
+        plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=range(morletP), col=plot3D::jet.col(100), clab='log2(power)', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
     }  ; dev.off()
 }
 
