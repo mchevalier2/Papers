@@ -48,8 +48,8 @@ if (makePlot) {
     H <- vegan::diversity(POLLEN[,-1], "shannon")
     ## Diversity Simpson
     D1 <- vegan::diversity(POLLEN[,-1], "simpson")
-    ## Diversity Fisher's alpha
-    alpha <- vegan::fisher.alpha(round(POLLEN[,-1]))
+    ## Rarefraction analysis
+    Rarefraction <- vegan::rarefy(round(POLLEN[,-1]), min(apply(round(POLLEN[,-1]),1,sum)))
     ## Species richness (S)
     S <- vegan::specnumber(POLLEN[,-1]) ## rowSums(BCI > 0) does the same... # Richness
     ## Pielou's evenness
@@ -57,7 +57,6 @@ if (makePlot) {
     ## Margalef’s Index
     DMG=(S-1) / log(POLLENSUM[,2])
 
-    Rarefraction <- vegan::rarefy(round(POLLEN[,-1]), min(apply(round(POLLEN[,-1]),1,sum)))
 
 
     COL='black'
@@ -72,18 +71,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent('black', alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(20, max(MAT[,2]), 'A', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(H)+diff(range(H))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(MAT[,1], H, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(0.75,3,0.25)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(0.75,3,0.5)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(H)+diff(range(H))/2, 'Shannon-Weiver Index (H)', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(H)+diff(range(H))/2, 'Shannon-Weiver Index (H)', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -92,18 +91,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent('black', alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(20, max(MAT[,2]), 'B', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(D1)+diff(range(D1))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(MAT[,1], D1, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(-0.25,0.9,0.05)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(-0.3,0.9,0.1)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(D1)+diff(range(D1))/2, 'Simpson Index (D1)', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(D1)+diff(range(D1))/2, 'Simpson Index (D1)', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -112,18 +111,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent('black', alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(20, max(MAT[,2]), 'C', cex=2.5, font=2, adj=c(0,1))
             }
-            plot.window(xlim=c(-100,900),ylim=range(alpha)+diff(range(alpha))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
-                points(MAT[,1], alpha, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
-                for(i in seq(4,20,2)) segments(820,i,809,i, lwd=0.5, col=COL2)
-                for(i in seq(4,20,4)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(alpha)+diff(range(alpha))/2, "Fischer's alpha", adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+            plot.window(xlim=c(-100,900),ylim=range(Rarefraction)+diff(range(Rarefraction))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
+                points(MAT[,1], Rarefraction, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
+                for(i in seq(4,16,2)) segments(820,i,809,i, lwd=0.5, col=COL2)
+                for(i in seq(4,16,4)) text(825,i,i, adj=c(0,0.5), col=COL2)
+                text(920, min(Rarefraction)+diff(range(Rarefraction))/2, "Rarefraction analysis", adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -132,18 +131,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent('black', alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(20, max(MAT[,2]), 'D', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(S)+diff(range(S))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(MAT[,1], S, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(10,50,5)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(10,50,10)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(S)+diff(range(S))/2, 'Number of taxa (S)', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(S)+diff(range(S))/2, 'Number of taxa (S)', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -152,38 +151,38 @@ if (makePlot) {
                 points(MAT, col=makeTransparent('black', alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(20, max(MAT[,2]), 'E', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(J)+diff(range(J))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(MAT[,1], J, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(0.25,0.85,0.05)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(0.3,0.8,0.1)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(J)+diff(range(J))/2, "Pielou's evennes (J)", adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(J)+diff(range(J))/2, "Pielou's evennes (J)", adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
-        plot.new()  ;  { ## SSTs
+        plot.new()  ;  {
             plot.window(xlim=c(-100,900),ylim=range(MAT[,2])+diff(range(MAT[,2]))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(MAT, col=makeTransparent('black', alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(20, max(MAT[,2]), 'F', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(DMG)+diff(range(DMG))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(MAT[,1], DMG, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(3,9,0.5)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(3,9,1)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(DMG)+diff(range(DMG))/2, "Margelef's index (DMG)", adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(DMG)+diff(range(DMG))/2, "Margelef's index (DMG)", adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
     dev.off()  ;  }
