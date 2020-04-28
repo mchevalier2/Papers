@@ -77,18 +77,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent(COL, alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(10, max(MAT[,2]), 'A', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(SSTs[,2])+diff(range(SSTs[,2]))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(SSTs, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(-3,3,1)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(-3,3,2)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(SSTs[,2])+diff(range(SSTs[,2]))/2, 'Mozambique Channel SSTs PC1', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(SSTs[,2])+diff(range(SSTs[,2]))/2, 'Mozambique Channel SSTs PC1', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -97,18 +97,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent(COL, alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(10, max(MAT[,2]), 'B', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=rev(range(LEAFWAX.detrended[,2]))-diff(range(LEAFWAX.detrended[,2]))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(LEAFWAX.detrended, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(-0.04,0.05,0.01)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(-0.04,0.05,0.02)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(LEAFWAX.detrended[,2])+diff(range(LEAFWAX.detrended[,2]))/2, 'Ratio of long-chain n-alkanes C31/(C29+C31) [detrended]', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(930, min(LEAFWAX.detrended[,2])+diff(range(LEAFWAX.detrended[,2]))/2, 'Ratio of long-chain n-alkanes\nC31/(C29+C31) [detrended]', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -117,18 +117,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent(COL, alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(10, max(MAT[,2]), 'C', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(MALAWI[,2])+diff(range(MALAWI[,2]))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(MALAWI, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(17,27,1)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(17,27,2)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(MALAWI[,2])+diff(range(MALAWI[,2]))/2, 'Malawi lake surface temperature (°C)', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(MALAWI[,2])+diff(range(MALAWI[,2]))/2, 'Malawi lake surface temperature (°C)', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -137,18 +137,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent(COL, alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(10, max(MAT[,2]), 'D', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(DomeC[,2])+diff(range(DomeC[,2]))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(DomeC, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(-10,5,2.5)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(-10,5,5)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(DomeC[,2])+diff(range(DomeC[,2]))/2, 'Dome C, Antarctica Temperature Reconstruction (°C)', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(930, min(DomeC[,2])+diff(range(DomeC[,2]))/2, 'Dome C, Antarctica\nTemperature Reconstruction (°C)', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -157,18 +157,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent(COL, alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(10, max(MAT[,2]), 'E', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=range(CO2[,2])+diff(range(CO2[,2]))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(CO2, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(180,315,15)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(180,315,30)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(CO2[,2])+diff(range(CO2[,2]))/2, 'Dome C, Antarctica pCO2 (ppm)', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(920, min(CO2[,2])+diff(range(CO2[,2]))/2, 'Dome C, Antarctica pCO2 (ppm)', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
 
@@ -177,18 +177,18 @@ if (makePlot) {
                 points(MAT, col=makeTransparent(COL, alpha=1), type='l', cex=0.3)
                 for(i in seq(16.5,21.5,0.5)) segments(-20,i,-9,i, lwd=0.5, col=COL)
                 for(i in seq(17,21.5,1)) text(-25,i,i, adj=c(1,0.5), col=COL)
-                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based MAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+                text(-115, min(MAT[,2])+diff(range(MAT[,2]))/2, 'MD96-2048 Pollen-based\nMAT Reconstruction (°C)', adj=c(0.5,1), srt=90, col=COL, cex=10/7)
                 rect(-9,min(MAT[,2])-0.02*diff(range(MAT[,2])),809,max(MAT[,2])+0.02*diff(range(MAT[,2])),lwd=0.5)
                 for(i in seq(0,800,25)){  segments(i,min(MAT[,2])-0.02*diff(range(MAT[,2])),i,min(MAT[,2])-ifelse(i%%50 == 0, 0.03,0.025)*diff(range(MAT[,2])), lwd=0.5)  }
                 for(i in seq(0,800,100)){  text(i,min(MAT[,2])-0.04*diff(range(MAT[,2])), i, cex=1, adj=c(0.5, 1))  }
-                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=8/7)
+                text(400, min(MAT[,2])-0.1*diff(range(MAT[,2])), 'Age (calendar yr BP x1000)', adj=c(0.5,0.5), cex=10/7)
                 text(10, max(MAT[,2]), 'F', cex=2.5, font=2, adj=c(0,1))
             }
             plot.window(xlim=c(-100,900),ylim=rev(range(LR04[,2]))-diff(range(LR04[,2]))*c(-0.1,0.02),main='',ylab='',xlab='')  ;  {
                 points(LR04, col=makeTransparent(COL2, alpha=1), type='l', cex=0.3)
                 for(i in seq(5,3.2,-0.25)) segments(820,i,809,i, lwd=0.5, col=COL2)
                 for(i in seq(5,3.2,-0.5)) text(825,i,i, adj=c(0,0.5), col=COL2)
-                text(920, min(LR04[,2])+diff(range(LR04[,2]))/2, 'Global ice volume (LR04) d18Obenthic (permil VPDB)', adj=c(0.5,0), srt=90, col=COL2, cex=8/7)
+                text(930, min(LR04[,2])+diff(range(LR04[,2]))/2, 'Global ice volume (LR04)\nd18Obenthic (permil VPDB)', adj=c(0.5,0), srt=90, col=COL2, cex=10/7)
             }
         }
     dev.off()  ;  }
