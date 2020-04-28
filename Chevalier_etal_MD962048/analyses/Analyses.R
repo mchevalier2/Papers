@@ -136,8 +136,8 @@ if (makeAnalysis) {
     D1 <- vegan::diversity(POLLEN[,-1], "simpson")
     ## Diversity inverse Simpson
     D2 <- vegan::diversity(POLLEN[,-1], "inv")
-    ## Diversity Fisher's alpha
-    alpha <- vegan::fisher.alpha(round(POLLEN[,-1]))
+    ## Rarefraction analysis
+    Rarefraction <- vegan::rarefy(round(POLLEN[,-1]), min(apply(round(POLLEN[,-1]),1,sum)))
     ## Species richness (S)
     S <- vegan::specnumber(POLLEN[,-1]) ## rowSums(BCI > 0) does the same... # Richness
     ## Pielou's evenness
@@ -148,20 +148,20 @@ if (makeAnalysis) {
 
     cat(paste0('cor(MAT, Richness) = ', round(cor(MAT, S), 3)), '\n')
     cat(paste0('cor(MAT, Pielou s Evenness) = ', round(cor(MAT, J), 3)), '\n')
-    cat(paste0('cor(MAT, Alpha) = ', round(cor(MAT, alpha), 3)), '\n')
+    cat(paste0('cor(MAT, Rarefraction) = ', round(cor(MAT, Rarefraction), 3)), '\n')
     cat(paste0('cor(MAT, Diversity-Shannon) = ', round(cor(MAT, H), 3)), '\n')
     cat(paste0('cor(MAT, Diversity-Simpson) = ', round(cor(MAT, D1), 3)), '\n')
     cat(paste0('cor(MAT, Diversity-Simpson inverse) = ', round(cor(MAT, D2), 3)), '\n')
     cat(paste0('cor(MAT, Margalef s index) = ', round(cor(MAT, DMG), 3)), '\n')
 
     invisible(readline(prompt="\nPress [enter] to plot the cross-correlation between the diversity indices"))
-    pairs(cbind(MAT, H, D1, D2, alpha, S, J, DMG), pch="+", col="blue")
+    pairs(cbind(MAT, H, D1, D2, Rarefraction, S, J, DMG), pch="+", col="blue")
 
     invisible(readline(prompt="\nPress [enter] for the next plot"))
     par(mfrow=c(1,7), mar=c(5,2,1,0))
     boxplot(S~GIG, main='Richness')
     boxplot(J~GIG, main='Evenness')
-    boxplot(alpha~GIG, main='Alpha')
+    boxplot(Rarefraction~GIG, main='Rarefraction')
     boxplot(H~GIG, main='Diversity-Shannon')
     boxplot(D1~GIG, main='Diversity-Simpson')
     boxplot(D2~GIG, main='Diversity-Simpson inverse')
