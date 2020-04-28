@@ -57,7 +57,7 @@ if (makePlot) {
     }
 
     XX.interp=0:800
-    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/blob/master/MD96-2048_MAT_01.xlsx?raw=true', which=2)[1:181,]
+    MAT=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=2)[1:181,]
     pdf=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=3)
     colnames(pdf) = pdf[1,]
     pdf = pdf[-1,]
@@ -94,7 +94,7 @@ if (makePlot) {
         plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=c(1,0), col=plot3D::gg2.col(200)[1:100], clab='A - Confidence level', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
 
         par(mar=c(2.3,2.2,3,.2))
-        plot3D::image2D(z=morletP[,1:70],y=rev(morlet$period)[1:70], x=morlet$x, ylim=rev(range(rev(morlet$period)[1:70])), col = plot3D::jet.col(100), cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Periods (in thousand of years)', cex.lab=6/7, contour=FALSE, log='y', lwd=1.5)
+        plot3D::image2D(z=morletP[,1:65],y=rev(morlet$period)[1:65], x=morlet$x, ylim=rev(range(rev(morlet$period)[1:65])), col = plot3D::jet.col(100), cex.axis=6/7, colkey=FALSE, resfac=2, tck=-.013, mgp=c(1.3, .3, 0), las=1, hadj=c(1,1), xlab='Age (calendar yr BP x1000)', ylab='Periods (in thousand of years)', cex.lab=6/7, contour=FALSE, log='y', lwd=1.5)
         contour(morlet$x, morlet$period, Signif, levels = 1, labels = morlet$siglvl, drawlabels = FALSE, axes = FALSE, frame.plot = FALSE, add = TRUE, lwd = 1, col = "black")
         polygon(c(0,morlet$x, 792,0),c(max(morlet$Scale),2**log2(morlet$coi), max(morlet$period),max(morlet$period)), col=makeTransparent('white', alpha=0.6), lwd=0.2)
         plot3D::colkey(side=3, length=0.8, dist=-0.01, lwd=0.1, cex.axis=6/7, clim=range(morletP), col=plot3D::jet.col(100), clab='B - log2(power)', font.clab=1, line.clab=1.3, adj.clab=0.5, add=TRUE, tck=-0.4, mgp=c(3, .25, 0), lwd.tick=0.7)
