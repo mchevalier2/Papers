@@ -48,8 +48,8 @@ if (makePlot) {
     H <- vegan::diversity(POLLEN[,-1], "shannon")
     ## Diversity Simpson
     D1 <- vegan::diversity(POLLEN[,-1], "simpson")
-    ## Diversity Fisher's alpha
-    alpha <- vegan::fisher.alpha(round(POLLEN[,-1]))
+    ## Rarefraction analysis
+    Rarefraction <- vegan::rarefy(round(POLLEN[,-1]), min(apply(round(POLLEN[,-1]),1,sum)))
     ## Species richness (S)
     S <- vegan::specnumber(POLLEN[,-1]) ## rowSums(BCI > 0) does the same... # Richness
     ## Pielou's evenness
@@ -76,7 +76,7 @@ if (makePlot) {
 
         boxplot(H~GIG, main='Shannon index', col=c(COL2,COL1), notch=TRUE)
         boxplot(D1~GIG, main='Simpson index', col=c(COL2,COL1), notch=TRUE)
-        boxplot(alpha~GIG, main="Fisher's alpha", col=c(COL2,COL1), notch=TRUE)
+        boxplot(Rarefraction~GIG, main="Rarefraction analysis", col=c(COL2,COL1), notch=TRUE)
         boxplot(S~GIG, main='Number of taxa (Richness)', col=c(COL2,COL1), notch=TRUE)
         boxplot(J~GIG, main="Pielou's evenness", col=c(COL2,COL1), notch=TRUE)
         boxplot(DMG~GIG, main="Margalef's index", col=c(COL2,COL1), notch=TRUE)
