@@ -57,6 +57,8 @@ if (makePlot) {
     ## Margalef’s Index
     DMG=(S-1) / log(POLLENSUM[,2])
 
+    Rarefraction <- vegan::rarefy(round(POLLEN[,-1]), min(apply(round(POLLEN[,-1]),1,sum)))
+
 
     COL='black'
     COL2=rgb(27,158,119,maxColorValue=255)
