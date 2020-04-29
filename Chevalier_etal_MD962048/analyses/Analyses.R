@@ -79,12 +79,12 @@ if (makeAnalysis) {
 
 
     cat('\n\n>>> Correlation analysis (last 430 kyrs / last 790 kyrs)\n')
-    cat(paste0('cor(MAT, CO2) = ', round(cor(MAT.smooth[1:430], CO2.smooth[1:430]),3), ' / ', round(cor(MAT.smooth, CO2.smooth),3)), '\n')
-    cat(paste0('cor(MAT, SSTs) = ', round(cor(MAT.smooth[1:430], SSTs.smooth[1:430]),3), ' / ', round(cor(SSTs.smooth, CO2.smooth),3)), '\n')
-    cat(paste0('cor(MAT, LR04) = ', round(cor(MAT.smooth[1:430], LR04.smooth[1:430]),3), ' / ', round(cor(MAT.smooth, LR04.smooth),3)), '\n')
-    cat(paste0('cor(MAT, DomeC) = ', round(cor(MAT.smooth[1:430], DomeC.smooth[1:430]),3), ' / ', round(cor(MAT.smooth, DomeC.smooth),3)), '\n')
-    cat(paste0('cor(MAT, MALAWI) = ', round(cor(MAT.smooth[1:430], MALAWI.smooth[1:430]),3), ' / ', round(cor(MAT.smooth, MALAWI.smooth),3)), '\n')
-    cat(paste0('cor(MAT, LEAFWAX) = ', round(cor(MAT.smooth[1:430], LEAFWAX.smooth[1:430]),3), ' / ', round(cor(MAT.smooth, LEAFWAX.smooth),3)), '\n')
+    cat(paste0('cor(MAT, CO2) = ', round(cor(MAT.smooth[1:342], CO2.smooth[1:342]),3), ' / ', round(cor(MAT.smooth, CO2.smooth),3)), '\n')
+    cat(paste0('cor(MAT, SSTs) = ', round(cor(MAT.smooth[1:342], SSTs.smooth[1:342]),3), ' / ', round(cor(SSTs.smooth, CO2.smooth),3)), '\n')
+    cat(paste0('cor(MAT, LR04) = ', round(cor(MAT.smooth[1:342], LR04.smooth[1:342]),3), ' / ', round(cor(MAT.smooth, LR04.smooth),3)), '\n')
+    cat(paste0('cor(MAT, DomeC) = ', round(cor(MAT.smooth[1:342], DomeC.smooth[1:342]),3), ' / ', round(cor(MAT.smooth, DomeC.smooth),3)), '\n')
+    cat(paste0('cor(MAT, MALAWI) = ', round(cor(MAT.smooth[1:342], MALAWI.smooth[1:342]),3), ' / ', round(cor(MAT.smooth, MALAWI.smooth),3)), '\n')
+    cat(paste0('cor(MAT, LEAFWAX) = ', round(cor(MAT.smooth[1:342], LEAFWAX.smooth[1:342]),3), ' / ', round(cor(MAT.smooth, LEAFWAX.smooth),3)), '\n')
 
     invisible(readline(prompt="\nPress [enter] to plot the cross-correlation between the temperature indicators"))
     pairs(cbind(MAT.smooth, CO2.smooth, SSTs.smooth, LR04.smooth, DomeC.smooth, MALAWI.smooth, LEAFWAX.smooth), pch="+", col="blue")
