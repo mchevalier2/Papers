@@ -78,7 +78,7 @@ if (makeAnalysis) {
     cat(paste0('Standard deviation = ', round(sd(clim, na.rm=TRUE),1), '°C\n'))
 
 
-    cat('\n\n>>> Correlation analysis (last 430 kyrs / last 790 kyrs)\n')
+    cat('\n\n>>> Correlation analysis (last 342 kyrs / last 790 kyrs)\n')
     cat(paste0('cor(MAT, CO2) = ', round(cor(MAT.smooth[1:342], CO2.smooth[1:342]),3), ' / ', round(cor(MAT.smooth, CO2.smooth),3)), '\n')
     cat(paste0('cor(MAT, SSTs) = ', round(cor(MAT.smooth[1:342], SSTs.smooth[1:342]),3), ' / ', round(cor(SSTs.smooth, CO2.smooth),3)), '\n')
     cat(paste0('cor(MAT, LR04) = ', round(cor(MAT.smooth[1:342], LR04.smooth[1:342]),3), ' / ', round(cor(MAT.smooth, LR04.smooth),3)), '\n')
@@ -101,10 +101,10 @@ if (makeAnalysis) {
       }else{
         g_tmp=c(g_tmp, min(MAT[which(MAT[,1] >= GLACIAL[i,1] & MAT[,1] < GLACIAL[i,2]),2]))
       }
-      if(GLACIAL[i,1]>430) break()
+      if(GLACIAL[i,1]>342) break()
     }
-    cat(paste0('Mean interglacial temperature (last 430 kyrs) = ', round(mean(ig_tmp),3)), '\n')
-    cat(paste0('Mean glacial temperature (last 430 kyrs) = ', round(mean(g_tmp),3)), '\n')
+    cat(paste0('Mean interglacial temperature (last 342 kyrs) = ', round(mean(ig_tmp),3)), '\n')
+    cat(paste0('Mean glacial temperature (last 342 kyrs) = ', round(mean(g_tmp),3)), '\n')
 
     ig_tmp=g_tmp=c()
     for(i in 1:nrow(GLACIAL)){
@@ -115,8 +115,8 @@ if (makeAnalysis) {
       }
       if(GLACIAL[i,1]>800) break()
     }
-    cat(paste0('Mean interglacial temperature (last 800 kyrs) = ', round(mean(ig_tmp),3)), '\n')
-    cat(paste0('Mean glacial temperature (last 800 kyrs) = ', round(mean(g_tmp),3)), '\n')
+    cat(paste0('Mean interglacial temperature (last 790 kyrs) = ', round(mean(ig_tmp),3)), '\n')
+    cat(paste0('Mean glacial temperature (last 790 kyrs) = ', round(mean(g_tmp),3)), '\n')
 
 
 
