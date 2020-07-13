@@ -58,6 +58,9 @@ if (makeAnalysis) {
     LEAFWAX=rio::import('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/data/IndependentRecords.xlsx', which=9)[1:177,c(1,10)]
     LEAFWAX.detrended=cbind(LEAFWAX[,1], LEAFWAX[,2] - LEAFWAX[,1]*coef(lm(LEAFWAX[,2]~ LEAFWAX[,1]))[2] - coef(lm(LEAFWAX[,2]~ LEAFWAX[,1]))[1])
 
+    SELECTEDTAXA=rio::import('https://github.com/mchevalier2/ClimateReconstructions/raw/master/MD96-2048_MAT_01.xlsx', which=6)
+    SELECTEDTAXA=SELECTEDTAXA[SELECTEDTAXA[,2] == 'Yes', 1]
+
     XX.interp=1:800
     MAT.smooth=gausmooth(MAT[,c(1,2)], XX.interp, mean(diff(MAT[,1])))
     CO2.smooth=gausmooth(CO2, XX.interp, mean(diff(MAT[,1])))
@@ -76,6 +79,15 @@ if (makeAnalysis) {
     )
     cat(paste0('Mean temperature value = ', round(mean(clim, na.rm=TRUE),1), '°C\n'))
     cat(paste0('Standard deviation = ', round(sd(clim, na.rm=TRUE),1), '°C\n'))
+
+
+    cat('\n\n>>> Pollen diversity and climate reconstructions\n')
+    cat('\nNumber of pollen taxa used for each sample:\n')
+    print(summary(apply(POLLEN[, colnames(POLLEN) %in% SELECTEDTAXA], 1, function(x) return(sum(ifelse(x>0,1,0))))))
+    cat('\nPercentage of terrestrial pollen taxa used for each sample:\n')
+    POLLEN_PERC = POLLEN[,-1] * 100 / apply(POLLEN[,-1], 1, sum)
+    print(summary(apply(POLLEN_PERC[, colnames(POLLEN_PERC) %in% SELECTEDTAXA], 1, sum)))
+
 
 
     cat('\n\n>>> Correlation analysis (last 342 kyrs / last 790 kyrs)\n')
