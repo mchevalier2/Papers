@@ -78,6 +78,8 @@ if (makePlot) {
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
         points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
         text(33, -27.5, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
+        points(34+26/60, -11-18/60,pch=23, col='deeppink4', bg='deeppink', cex=2, lwd=1.2)
+        text(35.5, -11-18/60, 'Lake\nMalawi', cex=1, adj=c(0, 0.6), font=2)
         rect(EXT[1], EXT[3]-20, EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
         for(i in seq(2,11,1)){  rect(EXT[1]+6+(i-2)*2, -37.5, EXT[1]+6+(i-2)*2+2, -38.5, col=RdYlBu[i], border=NA)  }
         rect(EXT[1]+6, -37.5, EXT[1]+26, -38.5, col=NA, border='black', lwd=0.3)
@@ -98,7 +100,8 @@ if (makePlot) {
         plot(WATERSHED2, add=TRUE, col=NA, border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
-        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=3, lwd=1.5)
+        text(32.6, -26.9, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
         rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
 
         ##-- PANE B
@@ -112,6 +115,8 @@ if (makePlot) {
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
         points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
         text(33, -27.5, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
+        points(34+26/60, -11-18/60,pch=23, col='deeppink4', bg='deeppink', cex=2, lwd=1.2)
+        text(35.5, -11-18/60, 'Lake\nMalawi', cex=1, adj=c(0, 0.6), font=2)
         rect(EXT[1], EXT[3]-20, EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
 
         LABELS=c('1', '2', '7', '9', '10', '12', '13')
@@ -132,7 +137,8 @@ if (makePlot) {
         plot(WATERSHED2, add=TRUE, col=NA, border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
-        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=2)
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=3, lwd=1.5)
+        text(32.6, -26.9, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
         rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
 
         ##-- PANE C
@@ -147,6 +153,8 @@ if (makePlot) {
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
         points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
         text(33, -27.5, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
+        points(34+26/60, -11-18/60,pch=23, col='deeppink4', bg='deeppink', cex=2, lwd=1.2)
+        text(35.5, -11-18/60, 'Lake\nMalawi', cex=1, adj=c(0, 0.6), font=2, col='white')
         rect(EXT[1], EXT[3]-20, EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
         ##
         LABELS=c('1-9', '10-99', '100-999', '>1000')
@@ -167,7 +175,8 @@ if (makePlot) {
         plot(WATERSHED2, add=TRUE, col=NA, border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
-        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=3)
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=3, lwd=1.5)
+        text(32.6, -26.9, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
         rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
 
     }  ;  dev.off()
