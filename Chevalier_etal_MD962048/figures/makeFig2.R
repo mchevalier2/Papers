@@ -1,4 +1,4 @@
-## Figure 2: Study area and calibration dataset
+""## Figure 2: Study area and calibration dataset
 ##
 ## Loading necessary data
 load(url('https://github.com/mchevalier2/Papers/raw/master/Chevalier_etal_MD962048/figures/Fig2.RData'))
@@ -31,6 +31,7 @@ if (makePlot) {
     library(raster)
 
     EXT <- c(10,42,-40,5)
+    EXT_CATCH <- c(24.575, 35.5, -28, -20)
 
     makeTransparent <- function(..., alpha=0.5) {
         if(alpha>1) alpha=1
@@ -62,21 +63,22 @@ if (makePlot) {
               )[c(3,8,8,8,8,8,7,7,5,4,4,6,1,3,9)]
 
     ## Plot
-    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig2.pdf"), width=7.54, height=7.54/3*(EXT[4]-EXT[3])/(EXT[2]-EXT[1]))  ;  {
-        par(mar=c(0,0,0,0), mfrow=c(1,3))
+    pdf(paste0(OUTPUT_FOLDER, "/Chevalier_etal_MD962048_Fig2.pdf"), width=7.54, height=7.54/3*(EXT[4]-EXT[3])/(EXT[2]-EXT[1])+1.9)  ;  {
+        layout(matrix(c(1,3,5,2,4,6), ncol=3, byrow=TRUE), width=1, height=c(7.54/3*(EXT[4]-EXT[3])/(EXT[2]-EXT[1]), 1.9))
+        par(mar=c(0,0,0,0))
 
         ##-- PANE A
         plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2], ylim=EXT[3:4])
         image(BIO1, col=RdYlBu, zlim=c(8,32), breaks=seq(8,32,2), add=TRUE, legend=FALSE, interpolate=FALSE)
         plot(LAKES, add=TRUE, col="grey50", border=NA)
         plot(M1, lwd=0.5, add=TRUE)
-        plot(WATERSHED, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='aquamarine4')
-        plot(WATERSHED2, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='aquamarine4')
+        plot(WATERSHED, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='black')
+        plot(WATERSHED2, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
         points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
         text(33, -27.5, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
-        rect(EXT[1], EXT[3], EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
+        rect(EXT[1], EXT[3]-20, EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
         for(i in seq(2,11,1)){  rect(EXT[1]+6+(i-2)*2, -37.5, EXT[1]+6+(i-2)*2+2, -38.5, col=RdYlBu[i], border=NA)  }
         rect(EXT[1]+6, -37.5, EXT[1]+26, -38.5, col=NA, border='black', lwd=0.3)
         for(i in seq(2,12,1)){
@@ -89,18 +91,28 @@ if (makePlot) {
         rect(EXT[1]+0.8, EXT[4]-0.8, EXT[1]+3.5, EXT[4]-3.8, border="black", lwd=0.4, col="white")
         text(EXT[1]+0.8+(3.5-0.8)/2, EXT[4]-0.8+(-3.8+0.8)/2, "A", cex=2, adj=c(0.5,0.5), font=2)
 
+        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2], ylim=EXT_CATCH[3:4])
+        image(mask(BIO1, WATERSHED), col=RdYlBu, zlim=c(8,32), breaks=seq(8,32,2), add=TRUE, legend=FALSE, interpolate=FALSE)
+        image(mask(BIO1, WATERSHED2), col=RdYlBu, zlim=c(8,32), breaks=seq(8,32,2), add=TRUE, legend=FALSE, interpolate=FALSE)
+        plot(WATERSHED, add=TRUE, col=NA, border='black')
+        plot(WATERSHED2, add=TRUE, col=NA, border='black')
+        plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
+        plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
+        rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
+
         ##-- PANE B
         plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2], ylim=EXT[3:4])
         plot(VEG,add=TRUE, lwd=0.1, col=DIV.10col[VEG$BIOME], border=NA)
         plot(LAKES, add=TRUE, col="grey50", border=NA)
         plot(M1, lwd=0.5, add=TRUE)
-        plot(WATERSHED, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='aquamarine4')
-        plot(WATERSHED2, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='aquamarine4')
+        plot(WATERSHED, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='black')
+        plot(WATERSHED2, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
         points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
         text(33, -27.5, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
-        rect(EXT[1], EXT[3], EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
+        rect(EXT[1], EXT[3]-20, EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
 
         LABELS=c('1', '2', '7', '9', '10', '12', '13')
         for(i in seq(1,7,1)){
@@ -111,19 +123,31 @@ if (makePlot) {
         rect(EXT[1]+0.8, EXT[4]-0.8, EXT[1]+3.5, EXT[4]-3.8, border="black", lwd=0.4, col="white")
         text(EXT[1]+0.8+(3.5-0.8)/2, EXT[4]-0.8+(-3.8+0.8)/2, "B", cex=2, adj=c(0.5,0.5), font=2)
 
+        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2], ylim=EXT_CATCH[3:4])
+        plot(raster::intersect(VEG, WATERSHED),add=TRUE, lwd=0.1, col=DIV.10col[VEG$BIOME], border=NA)
+        plot(raster::intersect(VEG, WATERSHED2[1,]),add=TRUE, lwd=0.1, col=DIV.10col[VEG$BIOME], border=NA)
+        plot(crop(VEG, extent(WATERSHED2[2,])),add=TRUE, lwd=0.1, col=DIV.10col[VEG$BIOME], border=NA)
+        plot(raster::intersect(VEG, WATERSHED2[3,]),add=TRUE, lwd=0.1, col=DIV.10col[VEG$BIOME], border=NA)
+        plot(WATERSHED, add=TRUE, col=NA, border='black')
+        plot(WATERSHED2, add=TRUE, col=NA, border='black')
+        plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
+        plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
+        rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
+
         ##-- PANE C
         plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2], ylim=EXT[3:4])
         plot(CONTINENT, lwd=0.5, add=TRUE, col='black')
-        plot(GBIF, col=heatcol4, zlim=c(1,4), add=TRUE, legend=FALSE, interpolate=FALSE)
+        image(GBIF, col=heatcol4, zlim=c(1,4), add=TRUE, legend=FALSE, interpolate=FALSE)
         plot(LAKES, add=TRUE, col="grey50", border=NA)
         plot(M1, lwd=0.5, add=TRUE)
-        plot(WATERSHED, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.7), border='aquamarine4')
-        plot(WATERSHED2, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='aquamarine4')
+        plot(WATERSHED, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.7), border='black')
+        plot(WATERSHED2, add=TRUE, col=makeTransparent('aquamarine1', alpha=0.5), border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
         points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
         text(33, -27.5, 'MD96-2048', cex=1, adj=c(0, 1), font=2)
-        rect(EXT[1], EXT[3], EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
+        rect(EXT[1], EXT[3]-20, EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
         ##
         LABELS=c('1-9', '10-99', '100-999', '>1000')
         for(i in seq(1,4)){
@@ -133,6 +157,19 @@ if (makePlot) {
         text(EXT[1]+(EXT[2]-EXT[1])/2, -36.5, 'Number of plant occurence per grid cell', adj=c(0.5, 0.5), cex=0.9)
         rect(EXT[1]+0.8, EXT[4]-0.8, EXT[1]+3.5, EXT[4]-3.8, border="black", lwd=0.4, col="white")
         text(EXT[1]+0.8+(3.5-0.8)/2, EXT[4]-0.8+(-3.8+0.8)/2, "C", cex=2, adj=c(0.5,0.5), font=2)
+
+        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2], ylim=EXT_CATCH[3:4])
+        #rect(EXT[1], EXT[3], EXT[2], EXT[4], border=NA, col='black')
+        plot(WATERSHED, add=TRUE, col='black', border='black')
+        image(mask(GBIF, WATERSHED), col=heatcol4, zlim=c(1,4), add=TRUE, legend=FALSE, interpolate=FALSE)
+        image(mask(GBIF, WATERSHED2), col=heatcol4, zlim=c(1,4), add=TRUE, legend=FALSE, interpolate=FALSE)
+        plot(WATERSHED, add=TRUE, col=NA, border='black')
+        plot(WATERSHED2, add=TRUE, col=NA, border='black')
+        plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
+        plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
+        rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
+
     }  ;  dev.off()
 }
 
