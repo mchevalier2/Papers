@@ -132,7 +132,7 @@ if (makePlot) {
         plot(WATERSHED2, add=TRUE, col=NA, border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
-        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=2)
         rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
 
         ##-- PANE C
@@ -167,7 +167,7 @@ if (makePlot) {
         plot(WATERSHED2, add=TRUE, col=NA, border='black')
         plot(LIMPOPO, add=TRUE, col='aquamarine4',lwd=((LIMPOPO$NAME=='Limpopo')+1))
         plot(LIMPOPO2, add=TRUE, col='aquamarine4',lwd=((LIMPOPO2$NAME=='Limpopo')+1))
-        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=1.5)
+        points(34.016700, -26.166700,pch=23, col='aquamarine4', bg='aquamarine1', cex=3)
         rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
 
     }  ;  dev.off()
