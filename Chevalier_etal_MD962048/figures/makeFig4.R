@@ -167,7 +167,7 @@ if (makePlot) {
           points(XX.interp, SSTs.smooth, lwd=1.2, col='darkorchid3', type='l')
           for(i in seq(-3,3,1)) segments(-20,i,-9,i, lwd=0.5, col=COL)
           for(i in seq(-3,3,2)) text(-25,i,i, adj=c(1,0.5), col=COL)
-          text(-175, -0.05, '(f) Mozambique Channel\nSSTs PC1', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
+          text(-175, -0.05, '(f) MD96-2048\nSSTs PC1', adj=c(0.5,1), srt=90, col=COL, cex=8/7)
       }
 
       ## MAT reconstruction
