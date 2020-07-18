@@ -68,7 +68,14 @@ if (makePlot) {
         par(mar=c(0,0,0,0))
 
         ##-- PANE A
-        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2], ylim=EXT[3:4])
+        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2]+c(-1.2,-1.2), ylim=EXT[3:4])
+        for(i in seq(-35,5,5)) {
+            if(i%%10 == 0) segments(EXT[1], i, EXT[2], i, lwd=0.3, col='grey50')
+            text(EXT[1]-0.3, i, i, adj=c(1,0.4), cex=0.8)
+        }
+        for(i in seq(10,40,5)) {
+            text(i, EXT[4]+0.3, i, adj=c(0,0), cex=0.8)
+        }
         image(BIO1, col=RdYlBu, zlim=c(8,32), breaks=seq(8,32,2), add=TRUE, legend=FALSE, interpolate=FALSE)
         plot(LAKES, add=TRUE, col="grey50", border=NA)
         plot(M1, lwd=0.5, add=TRUE)
@@ -93,7 +100,14 @@ if (makePlot) {
         rect(EXT[1]+0.8, EXT[4]-0.8, EXT[1]+3.5, EXT[4]-3.8, border="black", lwd=0.4, col="white")
         text(EXT[1]+0.8+(3.5-0.8)/2, EXT[4]-0.8+(-3.8+0.8)/2, "A", cex=2, adj=c(0.5,0.5), font=2)
 
-        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2], ylim=EXT_CATCH[3:4])
+        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2]+c(-0.41,-0.41), ylim=EXT_CATCH[3:4])
+        for(i in seq(-27,-21,2)) {
+            segments(EXT_CATCH[1], i, EXT_CATCH[2], i, lwd=0.3, col='grey50')
+            text(EXT_CATCH[1]-0.1, i, i, adj=c(1,0.4), cex=0.8)
+        }
+        for(i in seq(25,35,2)) {
+            text(i, EXT_CATCH[3]-0.1, i, adj=c(0,1), cex=0.8)
+        }
         image(mask(BIO1, WATERSHED), col=RdYlBu, zlim=c(8,32), breaks=seq(8,32,2), add=TRUE, legend=FALSE, interpolate=FALSE)
         image(mask(BIO1, WATERSHED2), col=RdYlBu, zlim=c(8,32), breaks=seq(8,32,2), add=TRUE, legend=FALSE, interpolate=FALSE)
         plot(WATERSHED, add=TRUE, col=NA, border='black')
@@ -106,6 +120,12 @@ if (makePlot) {
 
         ##-- PANE B
         plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2], ylim=EXT[3:4])
+        for(i in seq(-35,5,5)) {
+            if(i%%10 == 0) segments(EXT[1], i, EXT[2], i, lwd=0.3, col='grey50')
+        }
+        for(i in seq(10,40,5)) {
+            text(i, EXT[4]+0.3, i, adj=c(0,0), cex=0.8)
+        }
         plot(VEG,add=TRUE, lwd=0.1, col=DIV.10col[VEG$BIOME], border=NA)
         plot(LAKES, add=TRUE, col="grey50", border=NA)
         plot(M1, lwd=0.5, add=TRUE)
@@ -118,7 +138,6 @@ if (makePlot) {
         points(34+26/60, -11-18/60,pch=23, col='deeppink4', bg='deeppink', cex=2, lwd=1.2)
         text(35.5, -11-18/60, 'Lake\nMalawi', cex=1, adj=c(0, 0.6), font=2)
         rect(EXT[1], EXT[3]-20, EXT[2], EXT[4], col=NA,border='black', lwd=0.3)
-
         LABELS=c('1', '2', '7', '9', '10', '12', '13')
         for(i in seq(1,7,1)){
             rect(EXT[1]+5.5+(i-1)*3, -37.5, EXT[1]+5.5+(i-1)*3+2.5, -38.5, col=DIV.10col[as.numeric(LABELS[i])], border='black', lwd=0.4)
@@ -129,6 +148,12 @@ if (makePlot) {
         text(EXT[1]+0.8+(3.5-0.8)/2, EXT[4]-0.8+(-3.8+0.8)/2, "B", cex=2, adj=c(0.5,0.5), font=2)
 
         plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2], ylim=EXT_CATCH[3:4])
+        for(i in seq(-27,-21,2)) {
+            segments(EXT_CATCH[1], i, EXT_CATCH[2], i, lwd=0.3, col='grey50')
+        }
+        for(i in seq(25,35,2)) {
+            text(i, EXT_CATCH[3]-0.1, i, adj=c(0,1), cex=0.8)
+        }
         plot(raster::intersect(VEG, WATERSHED),add=TRUE, lwd=0.1, col=DIV.10col[raster::intersect(VEG, WATERSHED)$BIOME], border=NA)
         plot(raster::intersect(VEG, WATERSHED2[1,]),add=TRUE, lwd=0.1, col=DIV.10col[raster::intersect(VEG, WATERSHED2[1,])$BIOME], border=NA)
         plot(crop(VEG, extent(WATERSHED2[2,])),add=TRUE, lwd=0.1, col=DIV.10col[crop(VEG, extent(WATERSHED2[2,]))$BIOME], border=NA)
@@ -142,7 +167,14 @@ if (makePlot) {
         rect(EXT_CATCH[1], EXT_CATCH[3], EXT_CATCH[2], EXT_CATCH[4]+20, col=NA,border='black', lwd=0.3)
 
         ##-- PANE C
-        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2], ylim=EXT[3:4])
+        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT[1:2]+c(1.2,1.2), ylim=EXT[3:4])
+        for(i in seq(-35,5,5)) {
+            if(i%%10 == 0) segments(EXT[1], i, EXT[2], i, lwd=0.3, col='grey50')
+            text(EXT[2]+0.3, i, i, adj=c(0,0.4), cex=0.8)
+        }
+        for(i in seq(10,40,5)) {
+            text(i, EXT[4]+0.3, i, adj=c(0,0), cex=0.8)
+        }
         plot(CONTINENT, lwd=0.5, add=TRUE, col='black')
         image(GBIF, col=heatcol4, zlim=c(1,4), add=TRUE, legend=FALSE, interpolate=FALSE)
         plot(LAKES, add=TRUE, col="grey50", border=NA)
@@ -166,8 +198,14 @@ if (makePlot) {
         rect(EXT[1]+0.8, EXT[4]-0.8, EXT[1]+3.5, EXT[4]-3.8, border="black", lwd=0.4, col="white")
         text(EXT[1]+0.8+(3.5-0.8)/2, EXT[4]-0.8+(-3.8+0.8)/2, "C", cex=2, adj=c(0.5,0.5), font=2)
 
-        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2], ylim=EXT_CATCH[3:4])
-        #rect(EXT[1], EXT[3], EXT[2], EXT[4], border=NA, col='black')
+        plot(0,0, type='n', axes=FALSE,frame=FALSE, asp=1, xlim=EXT_CATCH[1:2]+c(0.41,0.41), ylim=EXT_CATCH[3:4])
+        for(i in seq(-27,-21,2)) {
+            segments(EXT_CATCH[1], i, EXT_CATCH[2], i, lwd=0.3, col='grey50')
+            text(EXT_CATCH[2]+0.1, i, i, adj=c(0,0.4), cex=0.8)
+        }
+        for(i in seq(25,35,2)) {
+            text(i, EXT_CATCH[3]-0.1, i, adj=c(0,1), cex=0.8)
+        }
         plot(WATERSHED, add=TRUE, col='black', border='black')
         image(mask(GBIF, WATERSHED), col=heatcol4, zlim=c(1,4), add=TRUE, legend=FALSE, interpolate=FALSE)
         image(mask(GBIF, WATERSHED2), col=heatcol4, zlim=c(1,4), add=TRUE, legend=FALSE, interpolate=FALSE)
