@@ -8,7 +8,7 @@ library(png)
 library(gridExtra)
 
 
-WORKING_FOLDER = "/Users/mchevali1/GitHub/Papers/Chevalier_etal_Pollen_Atlas_SA"
+WORKING_FOLDER = getwd()
 
 
 
