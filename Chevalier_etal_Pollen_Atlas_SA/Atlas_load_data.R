@@ -1,19 +1,14 @@
-
-
+library(crestr)
+library(pals)
+library(viridis)
+library(raster)
+library(sp)
 
 {
     EXT=c(10,42,-40,-12)
-    M1=readOGR("/Users/mchevali1/Scripts/QGIS/shapefiles/afrique.shp")
-    M1 <- spTransform(M1, CRS("+proj=longlat +datum=WGS84"))
+    data(M1)
+    M1 <- sp::spTransform(M1, CRS("+proj=longlat +datum=WGS84"))
     M1=raster::crop(M1,EXT)
-    #map_biomes = readOGR("/Users/mchevali1/Scripts/QGIS/shapefiles/wwf_terr_ecos/wwf_terr_ecos.shp")
-    #map_biomes <- spTransform(map_biomes, CRS("+proj=longlat +datum=WGS84"))
-    #map_biomes=raster::crop(map_biomes,EXT)
-
-    db <- DBI::dbConnect(DBI::dbDriver("PostgreSQL"),
-                         dbname = "GBIF_v2",
-                         host = "localhost", port = 5432,
-                         user = "mchevali1")
 
     variables=c("Tmean_Wet_Q","Tmin_Cold_M","Prec_Warm_Q","Prec_Cold_Q","Aridity")
 
@@ -60,16 +55,16 @@
 
     VARIABLES=list()
     for(v in variables)  {
-        VARIABLES[[v]]=dbGetQuery(db, paste0("SELECT DISTINCT longitude, latitude, ",WC_NAMES[[v]],
-                                             " FROM wc_qdgc",
-                                             " WHERE latitude >= ", EXT[3],
-                                               " AND latitude <= ", EXT[4],
-                                               " AND longitude >= ", EXT[1],
-                                               " AND longitude <= ", EXT[2],
-                                               " AND ai IS NOT NULL",
-                                               ";"
-                                            )
-                                  )
+        VARIABLES[[v]]=dbRequest(paste0( "SELECT DISTINCT longitude, latitude, ",WC_NAMES[[v]],
+                                         " FROM wc_qdgc",
+                                         " WHERE latitude >= ", EXT[3],
+                                           " AND latitude <= ", EXT[4],
+                                           " AND longitude >= ", EXT[1],
+                                           " AND longitude <= ", EXT[2],
+                                           " AND ai IS NOT NULL",
+                                           ";"
+                                        )
+                                )
     }
 
     VARIABLES[["Aridity"]][,3]=sqrt(VARIABLES[["Aridity"]][,3]/10000)
@@ -98,45 +93,81 @@
     }
 
     POLTYPES=POLTYPES_UNIQUE=BIOMES=BIOMES_UNIQUE=TAXONOMY=STATS=list()
-    POLLEN_TAXA = unique(rio::import('/Users/mchevali1/Dropbox/SA_Pollen_Atlas/Southern Africa Pollen taxa_master list_v3.xlsx', which=2, skip=1)[,'Pollen type'])
+    POLLEN_TAXA = unique(rio::import('pollenTypes_AtlasSA.xlsx', skip=1)[,'ProxyName'])
     POLLEN_TAXA = POLLEN_TAXA[!POLLEN_TAXA %in% c('Lactucoideae', 'Mimosoideae')]
     POLLEN_TAXA = POLLEN_TAXA[!POLLEN_TAXA %in% c('Bruguiera', 'Blaeria-type', 'Rhaphiostylis')]
     print('I do not have a good classification for Lactucoideae, Mimosoideae therefore I exclude them for now.')
     print('I do not have a enough points for Bruguiera, Rhaphiostylis and Blaeria therefore I exclude them for now.')
 
     POLLEN_TAXA = sort(POLLEN_TAXA)
+
+    taxonID2proxy <- data.frame("taxonID" = NA, "proxyName" = NA)
+    PSE = rio::import('pollenTypes_AtlasSA.xlsx')
+    for (taxLevel in 1:3) {
+        for (tax in PSE$ProxyName[ PSE$Level == taxLevel ]) {
+            for (w in which(PSE$ProxyName == tax)) {
+                taxonIDs <- getTaxonID(
+                  PSE$Family[w],
+                  PSE$Genus[w],
+                  PSE$Species[w],
+                  taxaType = 1
+                )
+                if (length(taxonIDs) > 0) {
+                    existingTaxa <- taxonIDs %in% taxonID2proxy[, "taxonID"]
+                    # If the taxon was first assigned to higher group, Reassign.
+                    if (sum(existingTaxa) > 0) {
+                        taxonID2proxy[taxonID2proxy[, "taxonID"] %in% taxonIDs, "proxyName"] <- tax
+                    }
+                    if (sum(existingTaxa) != length(taxonIDs)) {
+                        taxonID2proxy <- rbind(
+                          taxonID2proxy,
+                          data.frame("taxonID" = taxonIDs[!existingTaxa],
+                                     "proxyName" = rep(tax, sum(!existingTaxa)),
+                                     stringsAsFactors = FALSE)
+                                   )
+                    }
+                }
+            }
+        }
+    }
+    taxonID2proxy = taxonID2proxy[-1, ]
+
+
+    LIST_OF_TAXONIDS = list()
     for(pol in POLLEN_TAXA){
+        LIST_OF_TAXONIDS[[pol]] = paste0('(', paste(as.character(taxonID2proxy[taxonID2proxy[,2] == pol, 1]), collapse=', '),')')
         vv=paste(sapply(variables, function(x) return(WC_NAMES[[x]])), collapse=',')
-        dat = dbGetQuery(db,paste0("SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,species,genus,",vv,
-                                              " FROM taxa,distrib_qdgc,wc_qdgc ",
-                                              "WHERE taxa.taxonid=distrib_qdgc.taxonid",
-                                              "  AND distrib_qdgc.longitude=wc_qdgc.longitude",
-                                              "  AND distrib_qdgc.latitude=wc_qdgc.latitude",
-                                              "  AND pollen_type='",pol,"'",
-                                              "  AND distrib_qdgc.latitude >= ", EXT[3],
-                                              "  AND distrib_qdgc.latitude <= ", EXT[4],
-                                              "  AND distrib_qdgc.longitude >= ", EXT[1],
-                                              "  AND distrib_qdgc.longitude <= ", EXT[2],
-                                              "  AND ai IS NOT NULL"
-                                            )
-                                          )
+        dat = dbRequest(paste0( "SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,species,genus,",vv,
+                                "  FROM taxa,distrib_qdgc,wc_qdgc ",
+                                " WHERE taxa.taxonid=distrib_qdgc.taxonid",
+                                "   AND distrib_qdgc.longitude=wc_qdgc.longitude",
+                                "   AND distrib_qdgc.latitude=wc_qdgc.latitude",
+                                "   AND taxa.taxonID IN ", LIST_OF_TAXONIDS[[pol]],
+                                "   AND distrib_qdgc.latitude >= ", EXT[3],
+                                "   AND distrib_qdgc.latitude <= ", EXT[4],
+                                "   AND distrib_qdgc.longitude >= ", EXT[1],
+                                "   AND distrib_qdgc.longitude <= ", EXT[2],
+                                "   AND ai IS NOT NULL"
+                              )
+                            )
+
         if(nrow(dat) > 0){
             POLTYPES[[pol]]=dat
             colnames(POLTYPES[[pol]])[5:9] = variables
             POLTYPES[[pol]][,"Aridity"]= sqrt(POLTYPES[[pol]][,"Aridity"]/10000)
 
-            BIOMES[[pol]] = dbGetQuery(db,paste0("SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,taxa.taxonid,biome",
-                                                  " FROM taxa,distrib_qdgc,wwf_qdgc ",
-                                                  "WHERE taxa.taxonid=distrib_qdgc.taxonid",
-                                                  "  AND distrib_qdgc.longitude=wwf_qdgc.longitude",
-                                                  "  AND distrib_qdgc.latitude=wwf_qdgc.latitude",
-                                                  "  AND pollen_type='",pol,"'",
-                                                  "  AND distrib_qdgc.latitude >= ", EXT[3],
-                                                  "  AND distrib_qdgc.latitude <= ", EXT[4],
-                                                  "  AND distrib_qdgc.longitude >= ", EXT[1],
-                                                  "  AND distrib_qdgc.longitude <= ", EXT[2]
-                                                )
-                                              )
+            BIOMES[[pol]] = dbRequest(paste0("SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,taxa.taxonid,biome",
+                                              " FROM taxa,distrib_qdgc,wwf_qdgc ",
+                                              "WHERE taxa.taxonid=distrib_qdgc.taxonid",
+                                              "  AND distrib_qdgc.longitude=wwf_qdgc.longitude",
+                                              "  AND distrib_qdgc.latitude=wwf_qdgc.latitude",
+                                              "  AND taxa.taxonID IN ", LIST_OF_TAXONIDS[[pol]],
+                                              "  AND distrib_qdgc.latitude >= ", EXT[3],
+                                              "  AND distrib_qdgc.latitude <= ", EXT[4],
+                                              "  AND distrib_qdgc.longitude >= ", EXT[1],
+                                              "  AND distrib_qdgc.longitude <= ", EXT[2]
+                                            )
+                                          )
             BIOMES_UNIQUE[[pol]]=table(BIOMES[[pol]][,4])
             BIOMES_UNIQUE[[pol]] = round(100 * BIOMES_UNIQUE[[pol]] / sum(BIOMES_UNIQUE[[pol]]),1)
             BIOMES[[pol]]=unique(BIOMES[[pol]][,c(1,2,4)])
@@ -144,13 +175,13 @@
             POLTYPES_UNIQUE[[pol]]=unique(POLTYPES[[pol]][,c(1,2,5:10)])
 
             sp = paste(unique(POLTYPES[[pol]]$species), collapse="', '")
-            TAXONOMY[[pol]] = dbGetQuery(db,paste0("   SELECT kingdom, phylum,class_name, order_name, family,genus,species ",
-                                       "     FROM taxa ",
-                                       "    WHERE pollen_type='",pol,"'",
-                                       "      AND species IN ('", sp ,"')",
-                                       " ORDER BY genus,species"
-                                      )
-                                    )
+            TAXONOMY[[pol]] = dbRequest(paste0("   SELECT kingdom, phylum,class_name, order_name, family,genus,species ",
+                                               "     FROM taxa ",
+                                               "    WHERE taxa.taxonID IN ", LIST_OF_TAXONIDS[[pol]],
+                                               "      AND species IN ('", sp ,"')",
+                                               " ORDER BY genus,species"
+                                              )
+                                            )
 
             STATS[[pol]]=list()
             for(v in variables)  STATS[[pol]][[v]]=fitPDFS(v, pol)
@@ -159,44 +190,42 @@
         }
     }
 
-    VARIABLES[['distrib']] = dbGetQuery(db,paste0("SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,count(*), countryname ",
-                                        "  FROM taxa,distrib_qdgc,wc_qdgc, geo_qdgc ",
-                                        " WHERE taxa.taxonid=distrib_qdgc.taxonid",
-                                        "   AND distrib_qdgc.longitude=wc_qdgc.longitude",
-                                        "   AND distrib_qdgc.latitude=wc_qdgc.latitude",
-                                        "   AND geo_qdgc.longitude=wc_qdgc.longitude",
-                                        "   AND geo_qdgc.latitude=wc_qdgc.latitude",
-                                        "   AND pollen_type IN ('",paste(POLLEN_TAXA, collapse="', '"),"')",
-                                        "   AND distrib_qdgc.latitude >= ", EXT[3],
-                                        "   AND distrib_qdgc.latitude <= ", EXT[4],
-                                        "   AND distrib_qdgc.longitude >= ", EXT[1],
-                                        "   AND distrib_qdgc.longitude <= ", EXT[2],
-                                        "   AND ai IS NOT NULL",
-                                        " GROUP BY distrib_qdgc.longitude,distrib_qdgc.latitude,countryname"
-                                        )
-                                      )
+    VARIABLES[['distrib']] = dbRequest(paste0("SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,count(*), countryname ",
+                                              "  FROM taxa,distrib_qdgc,wc_qdgc, geo_qdgc ",
+                                              " WHERE taxa.taxonid=distrib_qdgc.taxonid",
+                                              "   AND distrib_qdgc.longitude=wc_qdgc.longitude",
+                                              "   AND distrib_qdgc.latitude=wc_qdgc.latitude",
+                                              "   AND geo_qdgc.longitude=wc_qdgc.longitude",
+                                              "   AND geo_qdgc.latitude=wc_qdgc.latitude",
+                                              "   AND taxa.taxonID IN ", LIST_OF_TAXONIDS[[pol]],
+                                              "   AND distrib_qdgc.latitude >= ", EXT[3],
+                                              "   AND distrib_qdgc.latitude <= ", EXT[4],
+                                              "   AND distrib_qdgc.longitude >= ", EXT[1],
+                                              "   AND distrib_qdgc.longitude <= ", EXT[2],
+                                              "   AND ai IS NOT NULL",
+                                              " GROUP BY distrib_qdgc.longitude,distrib_qdgc.latitude,countryname"
+                                              )
+                                            )
     RASTERS[['distrib']] = VARIABLES[['distrib']]
     RASTERS[['distrib']][,3] = log10(RASTERS[['distrib']][,3])
     RASTERS[['distrib']] = rasterFromXYZ(RASTERS[['distrib']][, -4])
 
     BIOMES2NBs=as.data.frame(matrix(1:9, ncol=1))
     rownames(BIOMES2NBs) = names(COL.BIOMES)
-    VARIABLES[['biomes']] = dbGetQuery(db,paste0("SELECT DISTINCT wwf_qdgc.longitude,wwf_qdgc.latitude,biome ",
-                                                 "  FROM wc_qdgc, wwf_qdgc",
-                                                 " WHERE wwf_qdgc.longitude=wc_qdgc.longitude",
-                                                 "   AND wwf_qdgc.latitude=wc_qdgc.latitude",
-                                                 "   AND wwf_qdgc.latitude >= ", EXT[3],
-                                                 "   AND wwf_qdgc.latitude <= ", EXT[4],
-                                                 "   AND wwf_qdgc.longitude >= ", EXT[1],
-                                                 "   AND wwf_qdgc.longitude <= ", EXT[2],
-                                                 "   AND ai IS NOT NULL"
-                                                )
-                                      )
+    VARIABLES[['biomes']] = dbRequest(paste0("SELECT DISTINCT wwf_qdgc.longitude,wwf_qdgc.latitude,biome ",
+                                             "  FROM wc_qdgc, wwf_qdgc",
+                                             " WHERE wwf_qdgc.longitude=wc_qdgc.longitude",
+                                             "   AND wwf_qdgc.latitude=wc_qdgc.latitude",
+                                             "   AND wwf_qdgc.latitude >= ", EXT[3],
+                                             "   AND wwf_qdgc.latitude <= ", EXT[4],
+                                             "   AND wwf_qdgc.longitude >= ", EXT[1],
+                                             "   AND wwf_qdgc.longitude <= ", EXT[2],
+                                             "   AND ai IS NOT NULL"
+                                            )
+                                  )
     RASTERS[['biomes']] = VARIABLES[['biomes']]
     RASTERS[['biomes']][,3] = BIOMES2NBs[RASTERS[['biomes']][,3],]
     RASTERS[['biomes']] = rasterFromXYZ(RASTERS[['biomes']])
-
-    DBI::dbDisconnect(db)
 
 
 

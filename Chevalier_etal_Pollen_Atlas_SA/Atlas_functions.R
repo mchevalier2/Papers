@@ -64,7 +64,7 @@
 
     ## Plot the histograms of variable v, with pollen type 'pol' in option.
     makeHistograms=function(v, pol=NA, rel=1, title=TRUE){
-        par(mar=c(2,1.8,1,0.2)/rel**2,mgp=c(3,0.4*rel,0))
+        par(mar=c(2,1.8+15*(rel-1),1,0.2)/rel**2,mgp=c(3,0.4*rel,0))
         val=table(VARIABLES[[v]][,3]%/%CLASS_WIDTH[[v]])
         plot(0,0,type='n',xlim=XRANGE[[v]],ylim=c(0,YMAX[[v]]),frame=FALSE,axes=FALSE,xlab="",ylab="")
         if(title) title(paste(VARIABLES_NAMES[[v]][4],sep=""),font=2,cex.main=TEXT_SIZE,line=-0.25)

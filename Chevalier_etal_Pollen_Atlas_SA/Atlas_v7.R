@@ -4,23 +4,27 @@ library(plotrix)
 library(ncdf4)
 library(gdata)
 library(rgdal)
-library(RPostgreSQL)
 library(png)
 library(gridExtra)
 
-#source('/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas_v7.R')
-source('/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas_functions.R')
-#source('/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas_load_data.R')
+
+WORKING_FOLDER = "/Users/mchevali1/GitHub/Papers/Chevalier_etal_Pollen_Atlas_SA"
 
 
+
+
+# ------------------------------------------------------------------------------
+setwd(WORKING_FOLDER)
+source('Atlas_functions.R')
+source('Atlas_load_data.R')
 
 
 YMAX=list()  ;  for(v in variables){  YMAX[[v]]=max(table(VARIABLES[[v]][,3]%/%CLASS_WIDTH[[v]]))  }
 TEXT_SIZE=1.5
-PAGE_NB=1
+PAGE_NB=20
 
 
-pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",width=8.27,height=11.69,useDingbats=FALSE)
+pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
   {
       par(mar=c(0,0,0,0),ps=7,cex=1.5)
       plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
@@ -32,34 +36,27 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
       text(0.5,0.52,"Lynne J. Quick",adj=c(0.5,0.5),font=1, cex=1.2)
       text(0.5,0.490,"Louis Scott",adj=c(0.5,0.5),font=1, cex=1.2)
 
-      rect(-1,0.3,2,0.4, col='red')
-      text(0.5,0.35,'This atlas is still in development\nand changes are likely to happen.', adj=c(0.5,0.5), font=2, cex=3)
+      rect(0.1,0.25,0.9,0.17, col='grey85')
+      text(0.5,0.21,'To cite this work: Chevalier, M., Chase, B.M., Quick, L.J., Scott, L., 2021. An atlas of\nsouthern African pollen types and their climatic affinities, Palaeocology of Africa,\nXX, XXX-XXX. doi: https://www.doi.org/XXXXXXXXXXXX', adj=c(0.5,0.5), font=1, cex=1)
       #rect(0.02,0.02,0.98,0.98)
 
       # Empty page;back of the cover
       plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
 
-      # First page
-      layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
-      PAGE_NB = addPageNumber(PAGE_NB)
-      plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=TRUE,axes=FALSE,xlab="",ylab="")
-      text(0.5,0.7,"How to cite this work",adj=c(0.5,0.5),cex=2)
-
 
       { # Some Descriptive text
           layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
-          PAGE_NB = addPageNumber(PAGE_NB)
-          plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=TRUE,axes=FALSE,xlab="",ylab="")
-          text(0.5,0.7,"Something about the atlas. Can be redundant with paper",adj=c(0.5,0.5),cex=2)
-
-          layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
-          PAGE_NB = addPageNumber(PAGE_NB)
-          plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=TRUE,axes=FALSE,xlab="",ylab="")
+          #PAGE_NB = addPageNumber(PAGE_NB)
+          plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
+          plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
+          text(0.5,0.7,"Insert paper here.",adj=c(0.5,0.5),cex=2)
       }
 
 
       { # Large climate maps
-          PAGE_NB = addEmptyPage(PAGE_NB)
+          layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
+          PAGE_NB = addPageNumber(PAGE_NB)
+          plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
 
           layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
           PAGE_NB = addPageNumber(PAGE_NB)
@@ -131,308 +128,6 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
       }
 
 
-      { # Summary taxa ranking
-          PAGE_NB = addEmptyPage(PAGE_NB)
-
-          layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
-          PAGE_NB = addPageNumber(PAGE_NB)
-          plot(0,type='n',xlim=c(0,18),ylim=c(0,26.7),frame=FALSE,axes=FALSE,xlab="",ylab="")
-          text(18/2,19.5,"POLLEN TAXA CLIMATE PREFERENCES",adj=c(0.5,0.5),font=2, cex=4)
-          txt=paste0( 'The five climatic optima of each taxon as defined by the pdfs were extracted for each variable.\n\n',
-                      '           ->  The pdfs of each pollen type are plotted for each variable. The pdfs are colour\n\n',
-                      '                 coded based on their optimate.\n\n',
-                      '           ->  The climate optima were sorted for each variable and plotted non-linearly. The\n\n',
-                      '                 taxa with the lowest/highest preferences are at the bottom/top and colour coded\n\n',
-                      '                 based on the colour scale used in the previous climate maps.\n\n',
-                      '           ->  The climate optima for the five variables were analysed using a Principal Component\n\n',
-                      '                 Analysis (PCA) to highlight the taxa with similar climate niches. We represent the\n\n',
-                      '                 position of the taxa on the first 3 components (>90% variance).\n\n',
-                      '\n\n'
-                    )
-          text(2,11.5,txt,adj=c(0,0.5),font=1, cex=2)
-          text(18/2,6,'Note: Some of these these plots do not include the climate tolerance or\nthe possible multimodality of the responses, and are not absolute.',adj=c(0.5,0.5),font=2, cex=2)
-          rect(0,0,18,26.7,cex=2)
-          rect(0.2,0.2,17.8,26.5,cex=2)
-      }
-
-
-      { # All the pdfs
-          for(v in variables) {
-              xx=seq(XRANGE[[v]][1],XRANGE[[v]][2],length.out=500)
-
-              PDFPOLS = list()
-              for(pol in names(POLTYPES)) {
-                  species=tapply(POLTYPES[[pol]][,v],POLTYPES[[pol]][,"species"],length)
-                  pdf=tapply(POLTYPES[[pol]][,v],POLTYPES[[pol]][,"species"],function(x) return(pdfsp(x,CLASS_WIDTH[[v]],VARIABLES_NAMES[[v]][3],xx)))
-                  pdfpol=rep(0,500) ; pdfpol.w=0
-                  for(sp in 1:length(species)){
-                      if(species[sp]>=20){
-                          pdfpol=pdfpol+sqrt(species[sp])*pdf[[names(species)[sp]]]
-                          pdfpol.w=pdfpol.w+sqrt(species[sp])
-                      }
-                  }
-                  PDFPOLS[[pol]] = pdfpol/pdfpol.w
-              }
-
-              ymx = quantile(unlist(lapply(PDFPOLS, function(x) return(max(x)))), probs=ifelse(v==variables[4], 0.9, 1))
-
-              for(page in 1:2) {
-                  m1 <- matrix(c(1, 2, 14:47), ncol=3, byrow=TRUE)
-                  m1 <- cbind(c(1, 3:13), m1)
-                  m1 <- rbind(rep(52, 4), m1, c(52, 48:50), rep(52, 4))
-                  m1 <- cbind(c(rep(52, 14), 51), m1, rep(52, 15))
-                  layout(m1, height=c(1.5, rep(26.2/12, 12), 0.5, 1.5), width=c(1.5,c(0.7, 5, 5, 5)/16*18,1.5))
-                  par(mar=c(0,0,0,0), ps=7)
-
-
-
-                  plot(NA, NA, type='n', xlim=c(0,1.05), ylim=c(0,1), xaxs='i', yaxs='i', frame=FALSE, axes=FALSE)
-                  text(0.05, 0.5, VARIABLES_NAMES[[v]][6], font=2, cex=2.5, adj=c(0, 0.45))
-
-                  plot(NA, NA, type='n', xlim=c(-30,530), ylim=c(-0.1,1.1), xaxs='i', yaxs='i', frame=FALSE, axes=FALSE)
-
-                  for (i in 1:500) {
-                      rect(i-1, 0.30, i, 0.7, border=VARIABLE.COL1000[[v]][i], col=VARIABLE.COL1000[[v]][i], lwd=0.2)
-                  }
-                  rect(0, 0.3, 500, 0.7, lwd=0.5)
-                  for(i in seq(XRANGE[[v]][1], XRANGE[[v]][2], CLASS_WIDTH[[v]]*2)) {
-                      j = min(which(xx >= i))
-                      segments(j, 0.7, j, 0.75, lwd=0.5)
-                      text(j, 0.8, i, adj=c(0.5, 0), cex=1.3)
-                  }
-                  for(i in seq(XRANGE[[v]][1]+CLASS_WIDTH[[v]], XRANGE[[v]][2], CLASS_WIDTH[[v]]*2)) {
-                      j = min(which(xx >= i))
-                      segments(j, 0.3, j, 0.25, lwd=0.5)
-                      text(j, 0.2, i, adj=c(0.5, 1), cex=1.3)
-                  }
-
-
-                  for(i in 1:11) {
-                      plot(0,0,type='n',xlim=c(0,1),ylim=c(0,ymx),
-                               frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
-                      segments(1, 0, 1, ymx, lwd=0.5)
-                      for(j in axTicks(2)) {
-                          if (j <= max(ymx)) {
-                              segments(1, j, 0.9, j, lwd=0.5)
-                              text( 0.85, j, j, cex=1.3, adj=c(1, 0.45))
-                          }
-                      }
-                      hbars=axTicks(2)
-                  }
-
-                  for(pol in names(POLTYPES)[(page-1)*70+1:34]) {
-                      plot(0,0,type='n',xlim=range(xx)+c(0,0.05)*diff(range(xx)),ylim=c(0,ymx),
-                               frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
-
-                      for(h in hbars) segments(xx[1], h, xx[500], h, lwd=0.5, col='grey80')
-                      polygon(xx[c(1,1:500, 500)],c(0, PDFPOLS[[pol]], 0), lwd=1.5, col=VARIABLE.COL1000[[v]][which.max(PDFPOLS[[pol]])])
-                      segments(xx[which.max(PDFPOLS[[pol]])],0,xx[which.max(PDFPOLS[[pol]])],max(PDFPOLS[[pol]]),lwd=1.2,lty=4)
-                      rect(xx[495], ymx*0.9, xx[495]-strwidth(pol, cex=1.3), ymx*0.9-strheight(pol, cex=1.3)*1.5, col="white", border=NA)
-                      text(xx[495], ymx*0.9, pol, adj=c(1,1), cex=1.3)
-
-                  }
-
-                  for(i in 1:3) {
-                      plot(0,0,type='n',xlim=range(xx)+c(0,0.05)*diff(range(xx)),ylim=c(0,1),
-                               frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
-                      segments(xx[1], 1, xx[500], 1, lwd=0.5)
-                      for(j in axTicks(1)) {
-                          if (j <= max(xx)) {
-                              segments(j, 1, j, 0.85, lwd=0.5)
-                              text(j, 0.75, j, cex=1.3, adj=c(0.5, 1))
-                          }
-                      }
-                  }
-                  PAGE_NB = addPageNumber(PAGE_NB)
-
-
-                  m1 <- matrix(c(13:48), ncol=3, byrow=TRUE)
-                  m1 <- cbind(m1, c(1:12))
-                  m1 <- rbind(rep(53, 4), m1, c(49:51, 53), rep(53, 4))
-                  m1 <- cbind(rep(53, 15), m1, c(rep(53, 14), 52))
-                  layout(m1, height=c(1.5, rep(26.2/12, 12), 0.5, 1.5), width=c(1.5,c(5, 5, 5, 0.7)/16*18,1.5))
-                  par(mar=c(0,0,0,0), ps=7)
-
-
-                  for(i in 1:12) {
-                      plot(0,0,type='n',xlim=c(0,1),ylim=c(0,ymx),
-                               frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
-                      segments(0, 0, 0, ymx, lwd=0.5)
-                      for(j in axTicks(2)) {
-                          if (j <= max(ymx)) {
-                              segments(0, j, 0.1, j, lwd=0.5)
-                              text( 0.15, j, j, cex=1.3, adj=c(0, 0.45))
-                          }
-                      }
-                      hbars=axTicks(2)
-                  }
-
-                  for(pol in names(POLTYPES)[(page-1)*70+35:70]) {
-                      plot(0,0,type='n',xlim=range(xx)-c(0.05, 0)*diff(range(xx)),ylim=c(0,ymx),
-                               frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
-
-                      for(h in hbars) segments(xx[1], h, xx[500], h, lwd=0.5, col='grey80')
-                      polygon(xx[c(1,1:500, 500)],c(0, PDFPOLS[[pol]], 0), lwd=1.5, col=VARIABLE.COL1000[[v]][which.max(PDFPOLS[[pol]])])
-                      segments(xx[which.max(PDFPOLS[[pol]])],0,xx[which.max(PDFPOLS[[pol]])],max(PDFPOLS[[pol]]),lwd=1.2,lty=4)
-                      rect(xx[5], ymx*0.9, xx[5]+strwidth(pol, cex=1.3), ymx*0.9-strheight(pol, cex=1.3)*1.5, col="white", border=NA)
-                      text(xx[5], ymx*0.9, pol, adj=c(0,1), cex=1.3)
-
-                  }
-
-                  for(i in 1:3) {
-                      plot(0,0,type='n',xlim=range(xx)+c(0,0.05)*diff(range(xx)),ylim=c(0,1),
-                               frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
-                      segments(xx[1], 1, xx[500], 1, lwd=0.5)
-                      for(j in axTicks(1)) {
-                          if (j <= max(xx)) {
-                              segments(j, 1, j, 0.85, lwd=0.5)
-                              text(j, 0.75, j, cex=1.3, adj=c(0.5, 1))
-                          }
-                      }
-                  }
-
-                  PAGE_NB = addPageNumber(PAGE_NB)
-              }
-          }
-      }
-
-
-      { # Taxa relative ranking
-          clim_opt=list()
-          for(v in variables) clim_opt[[v]] = unlist(sapply(names(POLTYPES), function(x) return(STATS[[x]][[v]][1])))
-          clim_opt <- as.data.frame(matrix(unlist(clim_opt), ncol=5, byrow=FALSE))
-          colnames(clim_opt) <- variables
-          rownames(clim_opt) <- names(POLTYPES)
-
-          layout(matrix(c( c(12,12,12,12),
-                           c(12, 1, 2,12),
-                           c(12, 3, 4,12),
-                           c(12, 5, 6,12),
-                           c(12, 7, 8,12),
-                           c(12, 9,10,12),
-                           c(11,12,12,12)),
-                          ncol=4, byrow=TRUE), height=c(1.5, rep(26.7/5, 5), 1.5), width=c(1.5,c(1,19)/20*18,1.5))
-
-          par(mar=c(0,0,0,0))
-
-          for(v in variables) {
-              w <- order(clim_opt[, v])[1:(nrow(clim_opt)/2+1)]
-              val=table(VARIABLES[[v]][,3]%/%CLASS_WIDTH[[v]])
-              plot(0, 0, xlim=c(0,1), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
-              text(0.5, 0.5, VARIABLES_NAMES[[v]][6], cex=2, font=2, srt=-90)
-
-              plot(0, 0, xlim=c(2.5, nrow(clim_opt)/2+1), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
-              idx=1
-              for(pol in rownames(clim_opt)[w]){
-                  text(idx, 0.55, pol, adj=c(1, 0.5), srt=-90, cex=1.4)
-                  text(idx, 0.15, formatC(clim_opt[pol, v], format='f', digits=ROUNDS[[v]]), adj=c(0,0.5), srt=-90, cex=1.4)
-                  rect(idx-0.5, 0.2, idx+0.5, 0.5, border=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])], col=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])])
-                  idx = idx + 1
-              }
-              rect(0.5, 0.2, idx-0.5, 0.5, lwd=0.5, col=NA, border='black')
-          }
-          PAGE_NB = addPageNumber(PAGE_NB)
-
-          layout(matrix(c( c(12,12,12,12),
-                           c(12, 1, 2,12),
-                           c(12, 3, 4,12),
-                           c(12, 5, 6,12),
-                           c(12, 7, 8,12),
-                           c(12, 9,10,12),
-                           c(12,12,12,11)),
-                          ncol=4, byrow=TRUE), height=c(1.5, rep(26.7/5, 5), 1.5), width=c(1.5,c(19,1)/20*18,1.5))
-
-          par(mar=c(0,0,0,0))
-          for(v in variables) {
-              w <- order(clim_opt[, v])[(nrow(clim_opt)/2+1.5):nrow(clim_opt)]
-              val=table(VARIABLES[[v]][,3]%/%CLASS_WIDTH[[v]])
-
-              plot(0, 0, xlim=c(1, nrow(clim_opt)/2-2), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
-              idx=1
-              for(pol in rownames(clim_opt)[w]){
-                text(idx, 0.55, pol, adj=c(1, 0.5), srt=-90, cex=1.5)
-                text(idx, 0.15, formatC(clim_opt[pol, v], format='f', digits=ROUNDS[[v]]), adj=c(0,0.5), srt=-90, cex=1.5)
-                rect(idx-0.5, 0.2, idx+0.5, 0.5, border=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])], col=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])])
-                idx = idx + 1
-              }
-              rect(0.5, 0.2, idx-0.5, 0.5, lwd=0.5, col=NA, border='black')
-
-              plot(0, 0, xlim=c(0,1), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
-              text(0.5, 0.5, VARIABLES_NAMES[[v]][6], cex=2, font=2, srt=-90)
-          }
-          PAGE_NB = addPageNumber(PAGE_NB)
-      } # End Taxa relative ranking
-
-
-      { # Plotting PCAs of climate optima
-          colnames(clim_opt) = c('TWetQ', 'TColdM', 'PWarmQ', 'PColdQ', 'Aridity')
-          acp=ade4::dudi.pca(clim_opt, center=TRUE, scale=TRUE, scannf=FALSE, nf=5)
-
-          myplot12 = factoextra::fviz_pca_biplot(acp, axes=c(2,1),
-                                                 gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                                                 repel = TRUE,     # Avoid text overlapping
-                                                 labelsize = 3,
-                                                 title = 'PC2 (x-axis) v. PC1 (y-axis)')
-          myplot12 = myplot12 + ggplot2::theme(text = ggplot2::element_text(size = 5),
-                                               plot.margin =ggplot2::margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
-                                               plot.title = ggplot2::element_text(size=10, face=2),
-                                               axis.title = ggplot2::element_text(size = 7),
-                                               axis.text = ggplot2::element_text(size = 7))
-
-          myplot13 = factoextra::fviz_pca_biplot(acp, axes=c(3,1),
-                                                 gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                                                 repel = TRUE,     # Avoid text overlapping
-                                                 labelsize = 2,
-                                                 title = 'PC3 (x-axis) v. PC1 (y-axis)')
-          myplot13 = myplot13 + ggplot2::theme(text = ggplot2::element_text(size = 5),
-                                               plot.margin =ggplot2::margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
-                                               plot.title = ggplot2::element_text(size=10, face=2),
-                                               axis.title = ggplot2::element_text(size = 7),
-                                               axis.text = ggplot2::element_text(size = 7))
-
-
-          myplot23 = factoextra::fviz_pca_biplot(acp, axes=c(3, 2),
-                                                 gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                                                 repel = TRUE,     # Avoid text overlapping
-                                                 labelsize = 2,
-                                                 title = 'PC3 (x-axis) v. PC2 (y-axis)')
-          myplot23 = myplot23 + ggplot2::theme(text = ggplot2::element_text(size = 5),
-                                               plot.margin =ggplot2::margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
-                                               plot.title = ggplot2::element_text(size=10, face=2),
-                                               axis.title = ggplot2::element_text(size = 7),
-                                               axis.text = ggplot2::element_text(size = 7))
-
-          page1 = ggplot2::ggplot() +
-                  ggplot2::theme_void() +
-                  ggplot2::geom_text(ggplot2::aes(0.92,0.95,label=PAGE_NB), size=2.5) +
-                  ggplot2::xlab(NULL) +
-                  ggplot2::xlim(0, 1) + ggplot2::ylim(0, 1) +
-                  ggplot2::geom_text(hjust=1, vjust=1)
-
-          page2 = ggplot2::ggplot() +
-                  ggplot2::theme_void() +
-                  ggplot2::geom_text(ggplot2::aes(0.1,0.95,label=PAGE_NB), size=2.5) +
-                  ggplot2::xlab(NULL) +
-                  ggplot2::xlim(0, 1) + ggplot2::ylim(0, 1) +
-                  ggplot2::geom_text(hjust=0, vjust=1)
-
-
-          layout_matrix1 = matrix(c( c(3,3,3),
-                                     c(3,1,3),
-                                     c(2,3,3)),
-                                  ncol=3, byrow=TRUE)
-          grid.arrange(myplot12, page1, layout_matrix = layout_matrix1, widths=c(1.5,18,1.5), heights=c(1.5,26.7,1.5))
-
-          layout_matrix2 = matrix(c( c(4,4,4),
-                                     c(4,1,4),
-                                     c(4,2,4),
-                                     c(4,4,3)),
-                                  ncol=3, byrow=TRUE)
-          grid.arrange(myplot13, myplot23, page2, layout_matrix = layout_matrix2, widths=c(1.5,18,1.5), heights=c(1.5,rep(26.7/2, 2),1.5))
-
-          PAGE_NB = PAGE_NB + 2
-      } # End plot PCAs
-
 
       { # Introduction to the atlas, Explanation of the elements
           PAGE_NB = addEmptyPage(PAGE_NB)
@@ -449,7 +144,7 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
                            c(1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2))),
                          ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
           PAGE_NB = addPageNumber(PAGE_NB)
-          png = readPNG('/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/page_example_1.png')
+          png = readPNG('page_example_1.png')
           plot(0,0,type='n', xlim=c(0,19), ylim=c(0,27.7), axes=FALSE, frame=FALSE)
           addImg(png, x = 19-14/2, y = 27.7/2, width = 15)
           rect(5,4, 19, 23.8)
@@ -478,7 +173,7 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
                            c(1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2))),
                          ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
           PAGE_NB = addPageNumber(PAGE_NB)
-          png = readPNG('/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/page_example_2.png')
+          png = readPNG('page_example_2.png')
           plot(0,0,type='n', xlim=c(0,19), ylim=c(0,27.7), axes=FALSE, frame=FALSE)
           addImg(png, x = 14/2, y = 27.7/2, width = 15)
           rect(0,4, 14, 23.8)
@@ -500,8 +195,8 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
 
       missing_photographes=c()
       { # The atlas itself
-          #for(pol in 1:length(POLTYPES)){
-          for(pol in 1:2){
+          for(pol in 1:length(POLTYPES)){
+          #for(pol in 1:3){
               print(names(POLTYPES)[pol])
 
               # Defining layout page 1
@@ -517,7 +212,18 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
               # Top banner
               par(mar=rep(0,4))
               plot(0,0,type='n',frame=FALSE,axes=FALSE,xlim=c(0,1),ylim=c(0,1),xlab="",ylab="")
-              text(0,0.9,toupper(names(POLTYPES)[pol]),adj=c(0,1),cex=3,font=2.3)
+              if(substr(toupper(names(POLTYPES)[pol]), nchar(toupper(names(POLTYPES)[pol]))-4, nchar(toupper(names(POLTYPES)[pol]))) == '-TYPE') {
+                  if(toupper(names(POLTYPES)[pol]) == 'SCROPHULARIACEAE-TYPE'){
+                      text(0,0.9,toupper(names(POLTYPES)[pol]),adj=c(0,1),cex=3,font=2)
+                  } else {
+                      text(0,0.9,strsplit(toupper(names(POLTYPES)[pol]), '-TYPE')[[1]][1],adj=c(0,1),cex=3,font=4)
+                      text(strwidth(strsplit(toupper(names(POLTYPES)[pol]), '-TYPE')[[1]][1], cex=3, font=4), 0.9, '-TYPE',adj=c(0,1),cex=3,font=2)
+                  }
+              } else if (substr(toupper(names(POLTYPES)[pol]), nchar(toupper(names(POLTYPES)[pol]))-4, nchar(toupper(names(POLTYPES)[pol]))) == 'ACEAE') {
+                  text(0,0.9,toupper(names(POLTYPES)[pol]),adj=c(0,1),cex=3,font=2)
+              } else {
+                  text(0,0.9,toupper(names(POLTYPES)[pol]),adj=c(0,1),cex=3,font=4)
+              }
               text(0, 0.55, paste0('(',length(unique(POLTYPES[[pol]][,3])),' species)'),adj=c(0,1),cex=2.5,font=1)
 
               plot(0,0,type='n',frame=FALSE,axes=FALSE,xlim=c(0,1),ylim=c(0,1),xlab="",ylab="")
@@ -585,7 +291,7 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
               PAGE_NB = addPageNumber(PAGE_NB)
 
               # Defining layout page 1
-              pictures <- list.files('/Users/mchevali1/Dropbox/SA_Pollen_Atlas/photographs/Finished pngs', full.names=TRUE, pattern='*.png')
+              pictures <- list.files('photographs', full.names=TRUE, pattern='*.png')
               pictures <- pictures[grep(paste0(names(POLTYPES)[pol],'-'), pictures)]
               #if(length(pictures) == 1) {
                   layout(matrix(c(c(18,18,18,18,18,18,18,18,18,18,18,18,18,18),
@@ -606,20 +312,6 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
                   print(c('no photograph', names(POLTYPES)[pol]))
                   missing_photographes = c(missing_photographes, names(POLTYPES)[pol])
               }
-              #    layout(matrix(c(c(20,20,20,20,20,20,20,20,20,20,20,20,20,20),
-              #                    c(20,11,11,11,12,12,12,13,13,13,14,14,14,20),
-              #                    c(20,16,16,16,16,16,16,16,16,16,16,16,16,20),
-              #                    c(20,15,15,15,15,15,15,15,18,18,18,18,18,20),
-              #                    c(20,15,15,15,15,15,15,15,18,18,18,18,18,20),
-              #                    c(20,15,15,15,15,15,15,15,18,18,18,18,18,20),
-              #                    c(20,15,15,15,15,15,15,15,18,18,18,18,18,20),
-              #                    c(20,1,1,1,2,2,2,19,18,18,18,18,18,20),
-              #                    c(20,1,1,1,2,2,2,19,18,18,18,18,18,20),
-              #                    c(20,3,3,3,4,4,4,5,5,5,6,6,6,20),
-              #                    c(20,7,7,7,8,8,8,9,9,9,10,10,10,20),
-              #                    c(20,20,20,20,20,20,20,20,20,20,20,20,20,17)),
-              #                  ncol=14,byrow=TRUE),width=c(1.5,rep(18/12,12),1.5),heights=c(1.5, c(2,1.15,5.37/2,5.37/2,5.37/2,5.37/2,5.37/2,5.37/2,5.37,5.37)/30*27.7, 1.5))
-              #}
 
               # Scatterplots
               scatterplot("Prec_Cold_Q","Prec_Warm_Q",pol)
@@ -734,8 +426,6 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
               plot(0,0,type='n', xlim=c(0,1), ylim=c(0,1), axes=FALSE, frame=FALSE)
               for(pict in pictures){
                   png = readPNG(pict)
-                  #writePNG(png, target='/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/images/test.png', dpi=150)
-                  #png = readPNG('/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/images/test.png')
                   addImg(png, x = 0.5, y = 0.45, width = 1)
               }
 
@@ -746,6 +436,280 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
               PAGE_NB = addPageNumber(PAGE_NB)
         }
     }
+
+
+    { # Summary taxa ranking
+        PAGE_NB = addEmptyPage(PAGE_NB)
+
+        layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
+        PAGE_NB = addPageNumber(PAGE_NB)
+        plot(0,type='n',xlim=c(0,18),ylim=c(0,26.7),frame=FALSE,axes=FALSE,xlab="",ylab="")
+        text(18/2,19.5,"POLLEN TAXA CLIMATE AFFINITIES",adj=c(0.5,0.5),font=2, cex=4)
+        txt=paste0( 'The five climatic optima of each taxon as defined by the pdfs were extracted for each variable.\n\n',
+                    '           ->  The pdfs of each pollen type are plotted for each variable. The pdfs are colour\n\n',
+                    '                 coded based on their optimum.\n\n',
+                    '           ->  The climate optima were sorted for each variable and plotted non-linearly. The\n\n',
+                    '                 taxa with the lowest/highest optima are at the bottom/top and colour coded\n\n',
+                    '                 based on the colour scale used in the previous climate maps.\n\n',
+                    '           ->  The climate optima for the five variables were analysed using a Principal Component\n\n',
+                    '                 Analysis (PCA) to highlight the taxa with similar climate niches. We represent the\n\n',
+                    '                 position of the taxa on the first 3 components (>90% variance).\n\n',
+                    '\n\n'
+                  )
+        text(2,11.5,txt,adj=c(0,0.5),font=1, cex=2)
+        text(18/2,6,'Note: Some of these these plots do not include the climate tolerance or\nthe possible multimodality of the responses, and are not absolute.',adj=c(0.5,0.5),font=2, cex=2)
+        rect(0,0,18,26.7,cex=2)
+        rect(0.2,0.2,17.8,26.5,cex=2)
+    }
+
+
+    { # All the pdfs
+        for(v in variables) {
+            xx=seq(XRANGE[[v]][1],XRANGE[[v]][2],length.out=500)
+
+            PDFPOLS = list()
+            for(pol in names(POLTYPES)) {
+                species=tapply(POLTYPES[[pol]][,v],POLTYPES[[pol]][,"species"],length)
+                pdf=tapply(POLTYPES[[pol]][,v],POLTYPES[[pol]][,"species"],function(x) return(pdfsp(x,CLASS_WIDTH[[v]],VARIABLES_NAMES[[v]][3],xx)))
+                pdfpol=rep(0,500) ; pdfpol.w=0
+                for(sp in 1:length(species)){
+                    if(species[sp]>=20){
+                        pdfpol=pdfpol+sqrt(species[sp])*pdf[[names(species)[sp]]]
+                        pdfpol.w=pdfpol.w+sqrt(species[sp])
+                    }
+                }
+                PDFPOLS[[pol]] = pdfpol/pdfpol.w
+            }
+
+            ymx = quantile(unlist(lapply(PDFPOLS, function(x) return(max(x)))), probs=ifelse(v==variables[4], 0.9, 1))
+
+            for(page in 1:4) {
+                m1 <- matrix(c(1, 1, 1, 14, 15, 49, 16:48), ncol=3, byrow=TRUE)
+                m1 <- cbind(c(1, 2:13), m1)
+                m1 <- rbind(rep(54, 4), m1, c(54, 50:52), rep(54, 4))
+                if(PAGE_NB %% 2 == 0) {
+                    m1 <- cbind(c(rep(54, 15), 53), m1, rep(54, 16))
+                } else {
+                    m1 <- cbind(rep(54, 16), m1, c(rep(54, 15), 53))
+                }
+
+                layout(m1, height=c(1.5, 0.5, rep(25.7/12, 12), 0.5, 1.5), width=c(1.5,c(0.7, 5, 5, 5)/16*18,1.5))
+                par(mar=c(0,0,0,0), ps=7)
+
+                plot(NA, NA, type='n', xlim=c(0,1), ylim=c(0,1), xaxs='i', yaxs='i', frame=FALSE, axes=FALSE)
+                text(0.5, 1, paste0(VARIABLES_NAMES[[v]][1], ' ', VARIABLES_NAMES[[v]][5], ' [page ', page, ']'), font=2, cex=3, adj=c(0.5, 1))
+
+                for(i in 1:12) {
+                    plot(0,0,type='n',xlim=c(0,1),ylim=c(0,ymx),
+                             frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
+                    segments(1, 0, 1, ymx, lwd=0.5)
+                    for(j in axTicks(2)) {
+                        if (j <= max(ymx) & j > 0) {
+                            segments(1, j, 0.9, j, lwd=0.5)
+                            text( 0.85, j, j, cex=1.3, adj=c(1, 0.45))
+                        }
+                    }
+                    hbars=axTicks(2)
+                }
+
+                for(pol in names(POLTYPES)[(page-1)*35+1:35]) {
+                    plot(0,0,type='n',xlim=range(xx)+c(0,0.05)*diff(range(xx)),ylim=c(0,ymx),
+                             frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
+
+                    for(h in hbars) segments(xx[1], h, xx[500], h, lwd=0.5, col='grey80')
+                    polygon(xx[c(1,1:500, 500)],c(0, PDFPOLS[[pol]], 0), lwd=1.5, col=VARIABLE.COL1000[[v]][which.max(PDFPOLS[[pol]])])
+                    segments(xx[which.max(PDFPOLS[[pol]])],0,xx[which.max(PDFPOLS[[pol]])],max(PDFPOLS[[pol]]),lwd=1.2,lty=4)
+
+                    rect(xx[495], ymx*0.9, xx[495]-strwidth(pol, cex=1.5), ymx*0.9-strheight(pol, cex=1.5)*1.5, col="white", border=NA)
+
+                    if(substr(pol, nchar(pol)-4, nchar(pol)) == '-type') {
+                        if(toupper(pol) == 'SCROPHULARIACEAE-TYPE'){
+                            text(xx[495], ymx*0.9, pol, adj=c(1,1), cex=1.5)
+                        } else {
+                            text(xx[495], ymx*0.9, '-type', adj=c(1,1), cex=1.5)
+                            text(xx[495]-strwidth('-type', cex=1.5), ymx*0.9, strsplit(pol, '-type')[[1]][1], adj=c(1,1), cex=1.5, font=3)
+                        }
+                    } else if (substr(pol, nchar(pol)-4, nchar(pol)) == 'aceae') {
+                        text(xx[495], ymx*0.9, pol, adj=c(1,1), cex=1.5)
+                    } else {
+                        text(xx[495], ymx*0.9, pol, adj=c(1,1), cex=1.5, font=3)
+                    }
+                }
+
+
+                plot(NA, NA, type='n', xlim=c(-30,530), ylim=c(-0.1,1.1), xaxs='i', yaxs='i', frame=FALSE, axes=FALSE)
+                for (i in 1:500) {
+                    rect(i-1, 0.30, i, 0.7, border=VARIABLE.COL1000[[v]][i], col=VARIABLE.COL1000[[v]][i], lwd=0.2)
+                }
+                rect(0, 0.3, 500, 0.7, lwd=0.5)
+                for(i in seq(XRANGE[[v]][1], XRANGE[[v]][2], CLASS_WIDTH[[v]]*2)) {
+                    j = min(which(xx >= i))
+                    segments(j, 0.7, j, 0.75, lwd=0.5)
+                    text(j, 0.8, i, adj=c(0.5, 0), cex=1.3)
+                }
+                for(i in seq(XRANGE[[v]][1]+CLASS_WIDTH[[v]], XRANGE[[v]][2], CLASS_WIDTH[[v]]*2)) {
+                    j = min(which(xx >= i))
+                    segments(j, 0.3, j, 0.25, lwd=0.5)
+                    text(j, 0.2, i, adj=c(0.5, 1), cex=1.3)
+                }
+
+                for(i in 1:3) {
+                    plot(0,0,type='n',xlim=range(xx)+c(0,0.05)*diff(range(xx)),ylim=c(0,1),
+                             frame=FALSE, axes=FALSE, xlab="",ylab="", xaxs='i', yaxs='i')
+                    segments(xx[1], 1, xx[500], 1, lwd=0.5)
+                    for(j in axTicks(1)) {
+                        if (j <= max(xx)) {
+                            segments(j, 1, j, 0.85, lwd=0.5)
+                            text(j, 0.75, j, cex=1.3, adj=c(0.5, 1))
+                        }
+                    }
+                }
+
+
+
+                PAGE_NB = addPageNumber(PAGE_NB)
+
+
+            }
+        }
+    }
+
+
+    { # Taxa relative ranking
+        clim_opt=list()
+        for(v in variables) clim_opt[[v]] = unlist(sapply(names(POLTYPES), function(x) return(STATS[[x]][[v]][1])))
+        clim_opt <- as.data.frame(matrix(unlist(clim_opt), ncol=5, byrow=FALSE))
+        colnames(clim_opt) <- variables
+        rownames(clim_opt) <- names(POLTYPES)
+
+        layout(matrix(c( c(12,12,12,12),
+                         c(12, 1, 2,12),
+                         c(12, 3, 4,12),
+                         c(12, 5, 6,12),
+                         c(12, 7, 8,12),
+                         c(12, 9,10,12),
+                         c(11,12,12,12)),
+                        ncol=4, byrow=TRUE), height=c(1.5, rep(26.7/5, 5), 1.5), width=c(1.5,c(1,19)/20*18,1.5))
+
+        par(mar=c(0,0,0,0))
+
+        for(v in variables) {
+            w <- order(clim_opt[, v])[1:(nrow(clim_opt)/2+1)]
+            val=table(VARIABLES[[v]][,3]%/%CLASS_WIDTH[[v]])
+            plot(0, 0, xlim=c(0,1), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
+            text(0.5, 0.5, VARIABLES_NAMES[[v]][6], cex=2, font=2, srt=-90)
+
+            plot(0, 0, xlim=c(2.5, nrow(clim_opt)/2+1), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
+            idx=1
+            for(pol in rownames(clim_opt)[w]){
+                text(idx, 0.55, pol, adj=c(1, 0.5), srt=-90, cex=1.4)
+                text(idx, 0.15, formatC(clim_opt[pol, v], format='f', digits=ROUNDS[[v]]), adj=c(0,0.5), srt=-90, cex=1.4)
+                rect(idx-0.5, 0.2, idx+0.5, 0.5, border=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])], col=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])])
+                idx = idx + 1
+            }
+            rect(0.5, 0.2, idx-0.5, 0.5, lwd=0.5, col=NA, border='black')
+        }
+        PAGE_NB = addPageNumber(PAGE_NB)
+
+        layout(matrix(c( c(12,12,12,12),
+                         c(12, 1, 2,12),
+                         c(12, 3, 4,12),
+                         c(12, 5, 6,12),
+                         c(12, 7, 8,12),
+                         c(12, 9,10,12),
+                         c(12,12,12,11)),
+                        ncol=4, byrow=TRUE), height=c(1.5, rep(26.7/5, 5), 1.5), width=c(1.5,c(19,1)/20*18,1.5))
+
+        par(mar=c(0,0,0,0))
+        for(v in variables) {
+            w <- order(clim_opt[, v])[(nrow(clim_opt)/2+1.5):nrow(clim_opt)]
+            val=table(VARIABLES[[v]][,3]%/%CLASS_WIDTH[[v]])
+
+            plot(0, 0, xlim=c(1, nrow(clim_opt)/2-2), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
+            idx=1
+            for(pol in rownames(clim_opt)[w]){
+              text(idx, 0.55, pol, adj=c(1, 0.5), srt=-90, cex=1.5)
+              text(idx, 0.15, formatC(clim_opt[pol, v], format='f', digits=ROUNDS[[v]]), adj=c(0,0.5), srt=-90, cex=1.5)
+              rect(idx-0.5, 0.2, idx+0.5, 0.5, border=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])], col=VARIABLE.COL[[v]][which(names(val) == clim_opt[pol, v]%/%CLASS_WIDTH[[v]])])
+              idx = idx + 1
+            }
+            rect(0.5, 0.2, idx-0.5, 0.5, lwd=0.5, col=NA, border='black')
+
+            plot(0, 0, xlim=c(0,1), ylim=c(0,1), type='n', axes=FALSE, frame=FALSE, xlab='', ylab='', main='')
+            text(0.5, 0.5, VARIABLES_NAMES[[v]][6], cex=2, font=2, srt=-90)
+        }
+        PAGE_NB = addPageNumber(PAGE_NB)
+    } # End Taxa relative ranking
+
+
+    { # Plotting PCAs of climate optima
+        colnames(clim_opt) = c('TWetQ', 'TColdM', 'PWarmQ', 'PColdQ', 'Aridity')
+        acp=ade4::dudi.pca(clim_opt, center=TRUE, scale=TRUE, scannf=FALSE, nf=5)
+
+        myplot12 = factoextra::fviz_pca_biplot(acp, axes=c(2,1),
+                                               gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                                               repel = TRUE,     # Avoid text overlapping
+                                               labelsize = 3,
+                                               title = 'PC2 (x-axis) v. PC1 (y-axis)')
+        myplot12 = myplot12 + ggplot2::theme(text = ggplot2::element_text(size = 5),
+                                             plot.margin =ggplot2::margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
+                                             plot.title = ggplot2::element_text(size=10, face=2),
+                                             axis.title = ggplot2::element_text(size = 7),
+                                             axis.text = ggplot2::element_text(size = 7))
+
+        myplot13 = factoextra::fviz_pca_biplot(acp, axes=c(3,1),
+                                               gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                                               repel = TRUE,     # Avoid text overlapping
+                                               labelsize = 2,
+                                               title = 'PC3 (x-axis) v. PC1 (y-axis)')
+        myplot13 = myplot13 + ggplot2::theme(text = ggplot2::element_text(size = 5),
+                                             plot.margin =ggplot2::margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
+                                             plot.title = ggplot2::element_text(size=10, face=2),
+                                             axis.title = ggplot2::element_text(size = 7),
+                                             axis.text = ggplot2::element_text(size = 7))
+
+
+        myplot23 = factoextra::fviz_pca_biplot(acp, axes=c(3, 2),
+                                               gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                                               repel = TRUE,     # Avoid text overlapping
+                                               labelsize = 2,
+                                               title = 'PC3 (x-axis) v. PC2 (y-axis)')
+        myplot23 = myplot23 + ggplot2::theme(text = ggplot2::element_text(size = 5),
+                                             plot.margin =ggplot2::margin(t = 0, r = 0, b = 0, l = 0, unit = "cm"),
+                                             plot.title = ggplot2::element_text(size=10, face=2),
+                                             axis.title = ggplot2::element_text(size = 7),
+                                             axis.text = ggplot2::element_text(size = 7))
+
+        page1 = ggplot2::ggplot() +
+                ggplot2::theme_void() +
+                ggplot2::geom_text(ggplot2::aes(0.92,0.95,label=PAGE_NB), size=2.5) +
+                ggplot2::xlab(NULL) +
+                ggplot2::xlim(0, 1) + ggplot2::ylim(0, 1) +
+                ggplot2::geom_text(hjust=1, vjust=1)
+
+        page2 = ggplot2::ggplot() +
+                ggplot2::theme_void() +
+                ggplot2::geom_text(ggplot2::aes(0.1,0.95,label=PAGE_NB), size=2.5) +
+                ggplot2::xlab(NULL) +
+                ggplot2::xlim(0, 1) + ggplot2::ylim(0, 1) +
+                ggplot2::geom_text(hjust=0, vjust=1)
+
+
+        layout_matrix1 = matrix(c( c(3,3,3),
+                                   c(3,1,3),
+                                   c(2,3,3)),
+                                ncol=3, byrow=TRUE)
+        grid.arrange(myplot12, page1, layout_matrix = layout_matrix1, widths=c(1.5,18,1.5), heights=c(1.5,26.7,1.5))
+
+        layout_matrix2 = matrix(c( c(4,4,4),
+                                   c(4,1,4),
+                                   c(4,2,4),
+                                   c(4,4,3)),
+                                ncol=3, byrow=TRUE)
+        grid.arrange(myplot13, myplot23, page2, layout_matrix = layout_matrix2, widths=c(1.5,18,1.5), heights=c(1.5,rep(26.7/2, 2),1.5))
+
+        PAGE_NB = PAGE_NB + 2
+    } # End plot PCAs
 
 
     { # Taxonomy
@@ -777,7 +741,21 @@ pdf("/Users/mchevali1/Manuscripts/Chevalier et al., SANBI Atlas/figs/Atlas.pdf",
                 line_count = new_page(max_lines, max_lines) ## Going to the next page if the last item is a new taxon name
                 PAGE_NB = line_count[2]  ;  line_count = line_count[1]
             }
-            text(0, line_count, pol, font=2, cex=2, adj=c(0,0.5))
+
+            if(substr(pol, nchar(pol)-4, nchar(pol)) == '-type') {
+                if(toupper(pol) == 'SCROPHULARIACEAE-TYPE'){
+                    text(0, line_count, pol, font=2, cex=2, adj=c(0,0.5))
+                } else {
+                    text(0, line_count, strsplit(pol, '-type')[[1]][1], font=4, cex=2, adj=c(0,0.5))
+                    text(strwidth(strsplit(pol, '-type')[[1]][1], font=4, cex=2), line_count, '-type', font=2, cex=2, adj=c(0,0.5))
+                }
+            } else if (substr(pol, nchar(pol)-4, nchar(pol)) == 'aceae') {
+                text(0, line_count, pol, font=2, cex=2, adj=c(0,0.5))
+            } else {
+                text(0, line_count, pol, font=4, cex=2, adj=c(0,0.5))
+            }
+
+            #text(0, line_count, pol, font=2, cex=2, adj=c(0,0.5))
             line_count = new_page(line_count, max_lines)
             PAGE_NB = line_count[2]  ;  line_count = line_count[1]
             genus =  unique(apply(TAXONOMY[[pol]], 1, function(x) return(paste(x[1:6], collapse=' > '))))
