@@ -27,14 +27,14 @@
         points(VARIABLES[[v1]][,3],VARIABLES[[v2]][,3],col="black", bg=NA,pch=21,cex=0.6, lwd=0.3)
         points(POLTYPES_UNIQUE[[pol]][,v1],POLTYPES_UNIQUE[[pol]][,v2],col=apply(POLTYPES_UNIQUE[[pol]],1,function(x) return(COL.BIOMES[[x[8]]])),pch=16,cex=0.8)
 
-        w=which(!is.na(VARIABLES[["Aridity"]][,3]))
-        if(pos==1){
-            text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][2]-diff(XRANGE[[v2]])/10,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(VARIABLES[[v1]][w,3],VARIABLES[[v2]][w,3]),3)*100))),col="grey70",adj=c(1,0),cex=8/5)
-            text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][2]-diff(XRANGE[[v2]])/5,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(POLTYPES_UNIQUE[[pol]][,v1],POLTYPES_UNIQUE[[pol]][,v2]),3)*100))),col="black",adj=c(1,0),cex=8/5)
-        }else{
-            text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][1]+diff(XRANGE[[v2]])/7,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(VARIABLES[[v1]][w,3],VARIABLES[[v2]][w,3]),3)*100))),col="grey70",adj=c(1,1),cex=8/5)
-            text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][1]+diff(XRANGE[[v2]])/20,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(POLTYPES_UNIQUE[[pol]][,v1],POLTYPES_UNIQUE[[pol]][,v2]),3)*100))),col="black",adj=c(1,1),cex=8/5)
-        }
+        #w=which(!is.na(VARIABLES[["Aridity"]][,3]))
+        #if(pos==1){
+        #    text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][2]-diff(XRANGE[[v2]])/10,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(VARIABLES[[v1]][w,3],VARIABLES[[v2]][w,3]),3)*100))),col="grey70",adj=c(1,0),cex=8/5)
+        #    text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][2]-diff(XRANGE[[v2]])/5,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(POLTYPES_UNIQUE[[pol]][,v1],POLTYPES_UNIQUE[[pol]][,v2]),3)*100))),col="black",adj=c(1,0),cex=8/5)
+        #}else{
+        #    text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][1]+diff(XRANGE[[v2]])/7,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(VARIABLES[[v1]][w,3],VARIABLES[[v2]][w,3]),3)*100))),col="grey70",adj=c(1,1),cex=8/5)
+        #    text(XRANGE[[v1]][2]-diff(XRANGE[[v1]])/7,XRANGE[[v2]][1]+diff(XRANGE[[v2]])/20,eval(substitute(expression(rho == b*a ), list(a = "%",b = round(cor(POLTYPES_UNIQUE[[pol]][,v1],POLTYPES_UNIQUE[[pol]][,v2]),3)*100))),col="black",adj=c(1,1),cex=8/5)
+        #}
 
         segments(XRANGE[[v1]][1]-diff(XRANGE[[v1]])/30,quantile(VARIABLES[[v2]][,3],0.1,na.rm=TRUE),XRANGE[[v1]][1]-diff(XRANGE[[v1]])/30,quantile(VARIABLES[[v2]][,3],0.9,na.rm=TRUE),col="grey70",lwd=0.7)
         segments(XRANGE[[v1]][1]-diff(XRANGE[[v1]])/20,quantile(POLTYPES_UNIQUE[[pol]][,v2],0.1,na.rm=TRUE),XRANGE[[v1]][1]-diff(XRANGE[[v1]])/20,quantile(POLTYPES_UNIQUE[[pol]][,v2],0.9,na.rm=TRUE),col="black",lwd=0.7)

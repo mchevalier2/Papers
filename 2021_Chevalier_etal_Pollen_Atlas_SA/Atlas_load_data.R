@@ -95,7 +95,7 @@ library(sp)
     POLTYPES=POLTYPES_UNIQUE=BIOMES=BIOMES_UNIQUE=TAXONOMY=STATS=list()
     POLLEN_TAXA = unique(rio::import('pollenTypes_AtlasSA.xlsx', skip=1)[,'ProxyName'])
     POLLEN_TAXA = POLLEN_TAXA[!POLLEN_TAXA %in% c('Lactucoideae', 'Mimosoideae')]
-    POLLEN_TAXA = POLLEN_TAXA[!POLLEN_TAXA %in% c('Bruguiera', 'Blaeria-type', 'Rhaphiostylis')]
+    POLLEN_TAXA = POLLEN_TAXA[!POLLEN_TAXA %in% c('Bruguiera', 'Blaeria-type', 'Rhaphiostylis', 'Carpacoce')]
     print('I do not have a good classification for Lactucoideae, Mimosoideae therefore I exclude them for now.')
     print('I do not have a enough points for Bruguiera, Rhaphiostylis and Blaeria therefore I exclude them for now.')
 

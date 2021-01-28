@@ -18,10 +18,11 @@ setwd(WORKING_FOLDER)
 source('Atlas_functions.R')
 source('Atlas_load_data.R')
 
+print(length(POLLEN_TAXA))
 
 YMAX=list()  ;  for(v in variables){  YMAX[[v]]=max(table(VARIABLES[[v]][,3]%/%CLASS_WIDTH[[v]]))  }
 TEXT_SIZE=1.5
-PAGE_NB=20
+PAGE_NB=1
 
 
 pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
@@ -43,14 +44,74 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
       # Empty page;back of the cover
       plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
 
-
-      { # Some Descriptive text
+      { # Table of Content
           layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
           #PAGE_NB = addPageNumber(PAGE_NB)
           plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
+          plot(0,type='n',xlim=c(-0.2,1.2),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
+          text(0.5,0.85,"TABLE OF CONTENT",adj=c(0.5,0.5),cex=3, font=2)
+
+          txt <- '1. Chevalier et al. (2021)     '
+          while(strwidth(txt, cex=2) < 0.92)  {
+              txt <- paste0(txt, '.')
+          }
+          text(0, 0.7, txt, cex=2, adj=c(0, 0.5))
+          text(1, 0.7, 1, cex=2, adj=c(1, 0.5))
+
+
+          txt <- '2. Climate maps     '
+          while(strwidth(txt, cex=2) < 0.92)  {
+              txt <- paste0(txt, '.')
+          }
+          text(0, 0.67, txt, cex=2, adj=c(0, 0.5))
+          text(1, 0.67, 23, cex=2, adj=c(1, 0.5))
+
+          txt <- '3. Distributions and climate affinities     '
+          while(strwidth(txt, cex=2) < 0.92)  {
+              txt <- paste0(txt, '.')
+          }
+          text(0, 0.64, txt, cex=2, adj=c(0, 0.5))
+          text(1, 0.64, 31, cex=2, adj=c(1, 0.5))
+
+          for(i in 1:7) {
+              txt <- paste0('       3.',i,' ', POLLEN_TAXA[(i-1)*20+1],' - ', POLLEN_TAXA[i*20] ,'     ')
+              while(strwidth(txt, cex=1.5) < 0.88)  {
+                  txt <- paste0(txt, '.')
+              }
+              text(0, 0.64-0.02*i, txt, cex=1.5, adj=c(0, 0.5))
+              text(1, 0.64-0.02*i, paste(31 + 2*((i-1)*20+3)-3, 31 + 2*(i*20+1), sep='-'), cex=1.5, adj=c(1, 0.5))
+          }
+
+          txt <- '4. Pollen taxa climate affinities     '
+          while(strwidth(txt, cex=2) < 0.92)  {
+              txt <- paste0(txt, '.')
+          }
+          text(0, 0.47, txt, cex=2, adj=c(0, 0.5))
+          text(1, 0.47, 315, cex=2, adj=c(1, 0.5))
+
+          txt <- '5. Pollen taxonomy     '
+          while(strwidth(txt, cex=2) < 0.92)  {
+              txt <- paste0(txt, '.')
+          }
+          text(0, 0.44, txt, cex=2, adj=c(0, 0.5))
+          text(1, 0.44, 341, cex=2, adj=c(1, 0.5))
+      }
+
+      layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
+      #PAGE_NB = addPageNumber(PAGE_NB)
+      plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
+
+      for(i in 1:20)  { # Some Descriptive text
+          layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
+          #PAGE_NB = addPageNumber(PAGE_NB)
+          PAGE_NB = addPageNumber(PAGE_NB)
           plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
           text(0.5,0.7,"Insert paper here.",adj=c(0.5,0.5),cex=2)
       }
+
+      layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
+      PAGE_NB = addPageNumber(PAGE_NB)
+      plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
 
 
       { # Large climate maps
@@ -292,22 +353,20 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
 
               # Defining layout page 1
               pictures <- list.files('photographs', full.names=TRUE, pattern='*.png')
-              pictures <- pictures[grep(paste0(names(POLTYPES)[pol],'-'), pictures)]
-              #if(length(pictures) == 1) {
-                  layout(matrix(c(c(18,18,18,18,18,18,18,18,18,18,18,18,18,18),
-                                  c(18,11,11,11,12,12,12,13,13,13,14,14,14,18),
-                                  c(18,16,16,16,16,16,16,16,16,19,19,19,19,18),
-                                  c(18,16,16,16,16,16,16,16,16,15,15,15,15,18),
-                                  c(18,16,16,16,16,16,16,16,15,15,15,15,15,18),
-                                  c(18,16,16,16,16,16,16,16,15,15,15,15,15,18),
-                                  c(18,16,16,16,16,16,16,16,15,15,15,15,15,18),
-                                  c(18,1,1,1,2,2,2,19,15,15,15,15,15,18),
-                                  c(18,1,1,1,2,2,2,19,15,15,15,15,15,18),
-                                  c(18,3,3,3,4,4,4,5,5,5,6,6,6,18),
-                                  c(18,7,7,7,8,8,8,9,9,9,10,10,10,18),
-                                  c(18,18,18,18,18,18,18,18,18,18,18,18,18,17)),
-                                ncol=14,byrow=TRUE),width=c(1.5,rep(18/12,12),1.5),heights=c(1.5, c(2,1.15,5.37/2,5.37/2,5.37/2,5.37/2,5.37/2,5.37/2,5.37,5.37)/30*27.7, 1.5))
-              #}
+              pictures <- pictures[grep(paste0(gsub('/', ':', names(POLTYPES)[pol],'-')), pictures)]
+              layout(matrix(c(c(19,19,19,19,19,19,19,19,19,19,19,19,19,19),
+                              c(19,11,11,11,12,12,12,13,13,13,14,14,14,19),
+                              c(19,16,16,16,16,16,16,16,16,17,17,17,17,19),
+                              c(19,16,16,16,16,16,16,16,16,15,15,15,15,19),
+                              c(19,16,16,16,16,16,16,16,15,15,15,15,15,19),
+                              c(19,16,16,16,16,16,16,16,15,15,15,15,15,19),
+                              c(19,16,16,16,16,16,16,16,15,15,15,15,15,19),
+                              c(19,1,1,1,2,2,2,19,15,15,15,15,15,19),
+                              c(19,1,1,1,2,2,2,19,15,15,15,15,15,19),
+                              c(19,3,3,3,4,4,4,5,5,5,6,6,6,19),
+                              c(19,7,7,7,8,8,8,9,9,9,10,10,10,19),
+                              c(19,19,19,19,19,19,19,19,19,19,19,19,19,18)),
+                            ncol=14,byrow=TRUE),width=c(1.5,rep(18/12,12),1.5),heights=c(1.5, c(2,1.15,5.37/2,5.37/2,5.37/2,5.37/2,5.37/2,5.37/2,5.37,5.37)/30*27.7, 1.5))
               if(length(pictures) == 0) {
                   print(c('no photograph', names(POLTYPES)[pol]))
                   missing_photographes = c(missing_photographes, names(POLTYPES)[pol])
@@ -428,12 +487,34 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
                   png = readPNG(pict)
                   addImg(png, x = 0.5, y = 0.45, width = 1)
               }
+              if (length(pictures) == 0) {
+                  rect(0.05, 0.05, 0.95, 0.95, lwd=0.5, border='grey60')
+                  segments(0.05, 0.05, 0.95, 0.95, lwd=0.5, lty=2, col='grey60')
+                  segments(0.05, 0.95, 0.95, 0.05, lwd=0.5, lty=2, col='grey60')
+                  text(0.5, 0.5, 'Under development', cex=2.5, adj=c(0.5, 0.45), col='grey30')
+              }
 
               # Distribution and Biomes
               plot(0,0,type="n",xlim=extent(M1)[1:2]+c(.7,-.7),ylim=extent(M1)[3:4]+c(-1,0),asp=1,frame=FALSE,axes=FALSE,xlab="",ylab="")
               plot(M1,add=TRUE, col='black', border='floralwhite')
               points(POLTYPES_UNIQUE[[pol]][,1:2],pch=20,cex=0.8,col=apply(POLTYPES_UNIQUE[[pol]],1,function(x) return(COL.BIOMES[[x[8]]])))
+
+              par(mar=rep(0,4))
+              plot(0,0,type='n',frame=FALSE,axes=FALSE,xlim=c(0,1),ylim=c(0,0.9),xlab="",ylab="")
+              if(substr(toupper(names(POLTYPES)[pol]), nchar(toupper(names(POLTYPES)[pol]))-4, nchar(toupper(names(POLTYPES)[pol]))) == '-TYPE') {
+                  if(toupper(names(POLTYPES)[pol]) == 'SCROPHULARIACEAE-TYPE'){
+                      text(1,0.9,toupper(names(POLTYPES)[pol]),adj=c(1,1),cex=2,font=2)
+                  } else {
+                      text(1-strwidth('-TYPE',cex=2,font=2), 0.9, strsplit(toupper(names(POLTYPES)[pol]), '-TYPE')[[1]][1],adj=c(1,1),cex=2,font=4)
+                      text(1,0.9,'-TYPE',adj=c(1,1),cex=2,font=2)
+                  }
+              } else if (substr(toupper(names(POLTYPES)[pol]), nchar(toupper(names(POLTYPES)[pol]))-4, nchar(toupper(names(POLTYPES)[pol]))) == 'ACEAE') {
+                  text(1,0.9,toupper(names(POLTYPES)[pol]),adj=c(1,1),cex=2,font=2)
+              } else {
+                  text(1,0.9,toupper(names(POLTYPES)[pol]),adj=c(1,1),cex=2,font=4)
+              }
               PAGE_NB = addPageNumber(PAGE_NB)
+
         }
     }
 
@@ -780,7 +861,7 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
 }  ;  dev.off()
 
 
-
+print(missing_photographes)
 
 
 
