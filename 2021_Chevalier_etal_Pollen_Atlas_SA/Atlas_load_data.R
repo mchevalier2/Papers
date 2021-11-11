@@ -36,7 +36,8 @@ library(sp)
                     'Tropical and subtropical moist broadleaf forests'=rgb(27,158,119,maxColorValue=255),
                     'Tropical and subtropical dry broadleaf forests'=rgb(102,166,30,maxColorValue=255),
                     'Mangroves'=rgb(252,205,229, maxColorValue=255),
-                    'Lakes'='black'
+                    'Lakes'='black',
+                    'Rock and Ice'='black'
                   )
 
     CLASS_WIDTH=list("Prec_Warm_Q"=50,
@@ -56,7 +57,7 @@ library(sp)
     VARIABLES=list()
     for(v in variables)  {
         VARIABLES[[v]]=dbRequest(paste0( "SELECT DISTINCT longitude, latitude, ",WC_NAMES[[v]],
-                                         " FROM wc_qdgc",
+                                         " FROM data_qdgc",
                                          " WHERE latitude >= ", EXT[3],
                                            " AND latitude <= ", EXT[4],
                                            " AND longitude >= ", EXT[1],
@@ -67,7 +68,7 @@ library(sp)
                                 )
     }
 
-    VARIABLES[["Aridity"]][,3]=sqrt(VARIABLES[["Aridity"]][,3]/10000)
+    VARIABLES[["Aridity"]][,3]=sqrt(VARIABLES[["Aridity"]][,3])
 
     VARIABLES_NAMES=list("Prec_Warm_Q"=c("Precipitation of the Warmest Quarter","R","lognormal","PWarmQ","(mm)", "Precipitation\nof the Warmest Quarter (mm)"),
                          "Prec_Cold_Q"=c("Precipitation of the Coldest Quarter","R","lognormal","PColdQ","(mm)", "Precipitation\nof the Coldest Quarter (mm)"),
@@ -137,16 +138,15 @@ library(sp)
     for(pol in POLLEN_TAXA){
         LIST_OF_TAXONIDS[[pol]] = paste0('(', paste(as.character(taxonID2proxy[taxonID2proxy[,2] == pol, 1]), collapse=', '),')')
         vv=paste(sapply(variables, function(x) return(WC_NAMES[[x]])), collapse=',')
-        dat = dbRequest(paste0( "SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,species,genus,",vv,
-                                "  FROM taxa,distrib_qdgc,wc_qdgc ",
+        dat = dbRequest(paste0( "SELECT data_qdgc.longitude,data_qdgc.latitude,species,genus,",vv,
+                                "  FROM taxa,distrib_qdgc,data_qdgc ",
                                 " WHERE taxa.taxonid=distrib_qdgc.taxonid",
-                                "   AND distrib_qdgc.longitude=wc_qdgc.longitude",
-                                "   AND distrib_qdgc.latitude=wc_qdgc.latitude",
+                                "   AND distrib_qdgc.locid=data_qdgc.locid",
                                 "   AND taxa.taxonID IN ", LIST_OF_TAXONIDS[[pol]],
-                                "   AND distrib_qdgc.latitude >= ", EXT[3],
-                                "   AND distrib_qdgc.latitude <= ", EXT[4],
-                                "   AND distrib_qdgc.longitude >= ", EXT[1],
-                                "   AND distrib_qdgc.longitude <= ", EXT[2],
+                                "   AND data_qdgc.latitude >= ", EXT[3],
+                                "   AND data_qdgc.latitude <= ", EXT[4],
+                                "   AND data_qdgc.longitude >= ", EXT[1],
+                                "   AND data_qdgc.longitude <= ", EXT[2],
                                 "   AND ai IS NOT NULL"
                               )
                             )
@@ -154,18 +154,18 @@ library(sp)
         if(nrow(dat) > 0){
             POLTYPES[[pol]]=dat
             colnames(POLTYPES[[pol]])[5:9] = variables
-            POLTYPES[[pol]][,"Aridity"]= sqrt(POLTYPES[[pol]][,"Aridity"]/10000)
+            POLTYPES[[pol]][,"Aridity"]= sqrt(POLTYPES[[pol]][,"Aridity"])
 
-            BIOMES[[pol]] = dbRequest(paste0("SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,taxa.taxonid,biome",
-                                              " FROM taxa,distrib_qdgc,wwf_qdgc ",
+            BIOMES[[pol]] = dbRequest(paste0("SELECT data_qdgc.longitude,data_qdgc.latitude,taxa.taxonid,biome",
+                                              " FROM taxa,distrib_qdgc,biogeography,data_qdgc ",
                                               "WHERE taxa.taxonid=distrib_qdgc.taxonid",
-                                              "  AND distrib_qdgc.longitude=wwf_qdgc.longitude",
-                                              "  AND distrib_qdgc.latitude=wwf_qdgc.latitude",
+                                              "  AND distrib_qdgc.locid=data_qdgc.locid",
+                                              "  AND biogeography.ecoid=data_qdgc.terr_ecoid",
                                               "  AND taxa.taxonID IN ", LIST_OF_TAXONIDS[[pol]],
-                                              "  AND distrib_qdgc.latitude >= ", EXT[3],
-                                              "  AND distrib_qdgc.latitude <= ", EXT[4],
-                                              "  AND distrib_qdgc.longitude >= ", EXT[1],
-                                              "  AND distrib_qdgc.longitude <= ", EXT[2]
+                                              "  AND data_qdgc.latitude >= ", EXT[3],
+                                              "  AND data_qdgc.latitude <= ", EXT[4],
+                                              "  AND data_qdgc.longitude >= ", EXT[1],
+                                              "  AND data_qdgc.longitude <= ", EXT[2]
                                             )
                                           )
             BIOMES_UNIQUE[[pol]]=table(BIOMES[[pol]][,4])
@@ -190,36 +190,33 @@ library(sp)
         }
     }
 
-    VARIABLES[['distrib']] = dbRequest(paste0("SELECT distrib_qdgc.longitude,distrib_qdgc.latitude,count(*), countryname ",
-                                              "  FROM taxa,distrib_qdgc,wc_qdgc, geo_qdgc ",
+    VARIABLES[['distrib']] = dbRequest(paste0("SELECT data_qdgc.longitude,data_qdgc.latitude,count(*), name ",
+                                              "  FROM taxa,distrib_qdgc,data_qdgc, geopolitical_units ",
                                               " WHERE taxa.taxonid=distrib_qdgc.taxonid",
-                                              "   AND distrib_qdgc.longitude=wc_qdgc.longitude",
-                                              "   AND distrib_qdgc.latitude=wc_qdgc.latitude",
-                                              "   AND geo_qdgc.longitude=wc_qdgc.longitude",
-                                              "   AND geo_qdgc.latitude=wc_qdgc.latitude",
+                                              "   AND distrib_qdgc.locid=data_qdgc.locid",
+                                              "   AND geopolitical_units.geopoid=data_qdgc.countryid",
                                               "   AND taxa.taxonID IN ", LIST_OF_TAXONIDS[[pol]],
-                                              "   AND distrib_qdgc.latitude >= ", EXT[3],
-                                              "   AND distrib_qdgc.latitude <= ", EXT[4],
-                                              "   AND distrib_qdgc.longitude >= ", EXT[1],
-                                              "   AND distrib_qdgc.longitude <= ", EXT[2],
+                                              "   AND data_qdgc.latitude >= ", EXT[3],
+                                              "   AND data_qdgc.latitude <= ", EXT[4],
+                                              "   AND data_qdgc.longitude >= ", EXT[1],
+                                              "   AND data_qdgc.longitude <= ", EXT[2],
                                               "   AND ai IS NOT NULL",
-                                              " GROUP BY distrib_qdgc.longitude,distrib_qdgc.latitude,countryname"
+                                              " GROUP BY data_qdgc.longitude,data_qdgc.latitude,name"
                                               )
                                             )
     RASTERS[['distrib']] = VARIABLES[['distrib']]
     RASTERS[['distrib']][,3] = log10(RASTERS[['distrib']][,3])
     RASTERS[['distrib']] = rasterFromXYZ(RASTERS[['distrib']][, -4])
 
-    BIOMES2NBs=as.data.frame(matrix(1:9, ncol=1))
+    BIOMES2NBs=as.data.frame(matrix(1:10, ncol=1))
     rownames(BIOMES2NBs) = names(COL.BIOMES)
-    VARIABLES[['biomes']] = dbRequest(paste0("SELECT DISTINCT wwf_qdgc.longitude,wwf_qdgc.latitude,biome ",
-                                             "  FROM wc_qdgc, wwf_qdgc",
-                                             " WHERE wwf_qdgc.longitude=wc_qdgc.longitude",
-                                             "   AND wwf_qdgc.latitude=wc_qdgc.latitude",
-                                             "   AND wwf_qdgc.latitude >= ", EXT[3],
-                                             "   AND wwf_qdgc.latitude <= ", EXT[4],
-                                             "   AND wwf_qdgc.longitude >= ", EXT[1],
-                                             "   AND wwf_qdgc.longitude <= ", EXT[2],
+    VARIABLES[['biomes']] = dbRequest(paste0("SELECT DISTINCT data_qdgc.longitude,data_qdgc.latitude,biome ",
+                                             "  FROM data_qdgc, biogeography",
+                                             " WHERE data_qdgc.terr_ecoid=biogeography.ecoid",
+                                             "   AND data_qdgc.latitude >= ", EXT[3],
+                                             "   AND data_qdgc.latitude <= ", EXT[4],
+                                             "   AND data_qdgc.longitude >= ", EXT[1],
+                                             "   AND data_qdgc.longitude <= ", EXT[2],
                                              "   AND ai IS NOT NULL"
                                             )
                                   )

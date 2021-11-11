@@ -24,7 +24,6 @@ YMAX=list()  ;  for(v in variables){  YMAX[[v]]=max(table(VARIABLES[[v]][,3]%/%C
 TEXT_SIZE=1.5
 PAGE_NB=1
 
-options(warn=2)
 
 pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
   {
@@ -38,8 +37,8 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
       text(0.5,0.52,"Lynne J. Quick",adj=c(0.5,0.5),font=1, cex=1.2)
       text(0.5,0.490,"Louis Scott",adj=c(0.5,0.5),font=1, cex=1.2)
 
-      rect(0.1,0.26,0.9,0.16, col='grey85')
-      text(0.5,0.21,'To cite this work: Chevalier, M., Chase, B.M., Quick, L.J. and Scott, L., 2021. An atlas of\nsouthern African pollen types and their climatic affinities, Palaeocology of Africa.\n Quaternary Vegetation Dynamics - The African Pollen Database\nCRC Press, London, pp. 239-258.\ndoi: https://www.doi.org/10.1201/9781003162766-15', adj=c(0.5,0.5), font=1, cex=1)
+      rect(0.1,0.25,0.9,0.17, col='grey85')
+      text(0.5,0.21,'To cite this work: Chevalier, M., Chase, B.M., Quick, L.J., Scott, L., 2021. An atlas of\nsouthern African pollen types and their climatic affinities, Palaeocology of Africa,\nXX, XXX-XXX. doi: https://www.doi.org/XXXXXXXXXXXX', adj=c(0.5,0.5), font=1, cex=1)
       #rect(0.02,0.02,0.98,0.98)
 
       # Empty page;back of the cover
@@ -65,14 +64,14 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
               txt <- paste0(txt, '.')
           }
           text(0, 0.67, txt, cex=2, adj=c(0, 0.5))
-          text(1, 0.67, 21, cex=2, adj=c(1, 0.5))
+          text(1, 0.67, 23, cex=2, adj=c(1, 0.5))
 
           txt <- '3. Distributions and climate affinities     '
           while(strwidth(txt, cex=2) < 0.92)  {
               txt <- paste0(txt, '.')
           }
           text(0, 0.64, txt, cex=2, adj=c(0, 0.5))
-          text(1, 0.64, 29, cex=2, adj=c(1, 0.5))
+          text(1, 0.64, 31, cex=2, adj=c(1, 0.5))
 
           for(i in 1:7) {
               txt <- paste0('       3.',i,' ', POLLEN_TAXA[(i-1)*20+1],' - ', POLLEN_TAXA[i*20] ,'     ')
@@ -80,7 +79,7 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
                   txt <- paste0(txt, '.')
               }
               text(0, 0.64-0.02*i, txt, cex=1.5, adj=c(0, 0.5))
-              text(1, 0.64-0.02*i, paste(31 + 2*((i-1)*20+3)-5, 31 + 2*(i*20+1)-2, sep='-'), cex=1.5, adj=c(1, 0.5))
+              text(1, 0.64-0.02*i, paste(31 + 2*((i-1)*20+3)-3, 31 + 2*(i*20+1), sep='-'), cex=1.5, adj=c(1, 0.5))
           }
 
           txt <- '4. Pollen taxa climate affinities     '
@@ -88,37 +87,31 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
               txt <- paste0(txt, '.')
           }
           text(0, 0.47, txt, cex=2, adj=c(0, 0.5))
-          text(1, 0.47, 313, cex=2, adj=c(1, 0.5))
+          text(1, 0.47, 315, cex=2, adj=c(1, 0.5))
 
           txt <- '5. Pollen taxonomy     '
           while(strwidth(txt, cex=2) < 0.92)  {
               txt <- paste0(txt, '.')
           }
           text(0, 0.44, txt, cex=2, adj=c(0, 0.5))
-          text(1, 0.44, 339, cex=2, adj=c(1, 0.5))
+          text(1, 0.44, 341, cex=2, adj=c(1, 0.5))
       }
 
       layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
       #PAGE_NB = addPageNumber(PAGE_NB)
       plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
 
-      for(i in list.files('10.1201_9781003162766-15_chapterpdf', full.names=TRUE))  {
+      for(i in 1:20)  { # Some Descriptive text
           layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
+          #PAGE_NB = addPageNumber(PAGE_NB)
           PAGE_NB = addPageNumber(PAGE_NB)
-
-          png = readPNG(i)
-          plot(0,0,type='n', xlim=c(0,19), ylim=c(0,27.7), axes=FALSE, frame=FALSE)
-          addImg(png, x = 19/2-0.5, y = 27.7/2-0.5, width = 22)
-          #rect(0,0, 19, 27.7)
-
-
-         # plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
-          #text(0.5,0.7,"Insert paper here.",adj=c(0.5,0.5),cex=2)
+          plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
+          text(0.5,0.7,"Insert paper here.",adj=c(0.5,0.5),cex=2)
       }
 
-      #layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
-      #PAGE_NB = addPageNumber(PAGE_NB)
-      #plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
+      layout(matrix(c(3,3,3,3,2,3,1+2*(PAGE_NB%%2),3,3-2*(PAGE_NB%%2)), ncol=3, byrow=TRUE), height=c(1.5, 26.7, 1.5), width=c(1.5,18,1.5))
+      PAGE_NB = addPageNumber(PAGE_NB)
+      plot(0,type='n',xlim=c(0,1),ylim=c(0,1),frame=FALSE,axes=FALSE,xlab="",ylab="")
 
 
       { # Large climate maps
@@ -180,7 +173,7 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
           segments(extent(M1)@xmin-0.25, extent(M1)@ymax, extent(M1)@xmax + 0.5, extent(M1)@ymax)
           for(i in seq(15,40,5)) text(i, extent(M1)@ymax+0.2, paste0(abs(i),'E'), adj=c(0.5,0), cex=1.5)
 
-          val=table( VARIABLES[[v]][!(VARIABLES[[v]][,3] %in% c('Lakes', 'Rock and Ice')) ,3])
+          val=table(VARIABLES[[v]][VARIABLES[[v]][,3] != 'Lakes' ,3])
           plot(0,0, type='n', xlim=c(-3200,4000), ylim=c(0.0,9.5), axes=FALSE, frame=FALSE)
           segments(0,0.5,0,8.5, lwd=0.5)
           for(b in 1:8) {
@@ -264,7 +257,7 @@ pdf('Atlas.pdf',width=8.27,height=11.69,useDingbats=FALSE)
       missing_photographes=c()
       { # The atlas itself
           for(pol in 1:length(POLTYPES)){
-          #for(pol in 1:80){
+          #for(pol in 1:3){
               print(names(POLTYPES)[pol])
 
               # Defining layout page 1

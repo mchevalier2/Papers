@@ -25,7 +25,7 @@
         rect(x1[1], x2[1], x1[2], x2[2], lwd=0.5)
 
         points(VARIABLES[[v1]][,3],VARIABLES[[v2]][,3],col="black", bg=NA,pch=21,cex=0.6, lwd=0.3)
-        points(POLTYPES_UNIQUE[[pol]][,v1],POLTYPES_UNIQUE[[pol]][,v2],col=apply(POLTYPES_UNIQUE[[pol]],1,function(x) return(COL.BIOMES[[x[8]]])),pch=16,cex=0.8)
+        points(POLTYPES_UNIQUE[[pol]][,v1],POLTYPES_UNIQUE[[pol]][,v2],col=unlist(apply(POLTYPES_UNIQUE[[pol]],1,function(x) return(COL.BIOMES[[x[8]]]))),pch=16,cex=0.8)
 
         #w=which(!is.na(VARIABLES[["Aridity"]][,3]))
         #if(pos==1){
